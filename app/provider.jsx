@@ -14,27 +14,30 @@ function Provider({ children }) {
     const CreateNewUser = () =>{
 
         supabase.auth.getUser().then(async ({data: {user}})=>{
+            //check if user exist
             let {data : users, error} = await supabase
             .from('users')
             .select('*').eq('email', user?.email);
 
-        console.log(users)
+            console.log('Provider - Database users:', users);
+            console.log('Provider - Database error:', dbError);
 
-        if(users?.length === 0){      
-            //create new user
-            const {data, error} = await supabase.from('users')
-            .insert([
-                {
-                name:user?.user_metadata?.name,
-                email:user?.email,
-                picture:user?.user_metadata?.picture
-                }
-        ])
-        console.log(data);
-        setUser(data);
-        return;
-        }
-        setUser(users[0]);
+            if(users?.length === 0){      
+                //create new user
+                const {data, error: insertError} = await supabase.from('users')
+                .insert([
+                    {
+                    name:user?.user_metadata?.name,
+                    email:user?.email,
+                    picture:user?.user_metadata?.picture
+                    }
+                ])
+                console.log('Provider - Insert result:', data);
+                console.log('Provider - Insert error:', insertError);
+                setUser(data?.[0] || null);
+                return;
+            }
+            setUser(users[0]);
         })
     }
     return (
