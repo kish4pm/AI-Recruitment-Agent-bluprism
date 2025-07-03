@@ -20,7 +20,6 @@ function Provider({ children }) {
             .select('*').eq('email', user?.email);
 
             console.log('Provider - Database users:', users);
-            console.log('Provider - Database error:', dbError);
 
             if(users?.length === 0){      
                 //create new user

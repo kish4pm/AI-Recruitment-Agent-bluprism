@@ -57,7 +57,7 @@ export function RegisterForm() {
         navigate("/login");
       } else {
         setError(result.error);
-        toast.error(result.error);
+        toast.error("Email Already Exist");
       }
     } catch (err) {
       toast.error("Email alredy exist.");
