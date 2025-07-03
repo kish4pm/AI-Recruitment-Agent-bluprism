@@ -11,7 +11,9 @@ import { supabase } from "@/services/supabaseClient";
 export default function Home() {
   const router = useRouter();
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
-
+ 
+ 
+  /// lgoin wit hgoogle
   const signInWithGoogle = async () => {
     const { error } = await supabase.auth.signInWithOAuth({ 
       provider: 'google',
@@ -20,6 +22,11 @@ export default function Home() {
       }
     });
     if (error) console.error(error.message);
+  };
+
+
+  const handleStartRecruiting = () => {
+    router.push('/login'); //
   };
 
   useEffect(() => {
@@ -128,7 +135,7 @@ export default function Home() {
             <Button
               size="lg"
               className="bg-blue-600 hover:bg-blue-700 text-white group px-8 py-6 text-lg cursor-pointer"
-              onClick={signInWithGoogle} // Example navigation
+              onClick={handleStartRecruiting} // Example navigation
             >
               Start Recruiting
               <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />

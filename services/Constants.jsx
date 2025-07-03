@@ -1,4 +1,4 @@
-import { BriefcaseBusinessIcon, Code2Icon, User2Icon, Component, Puzzle, Calendar, LayoutDashboard, List, Settings, WalletCards } from "lucide-react";
+import { BriefcaseBusinessIcon, Code2Icon, User2Icon, Component, Puzzle, Calendar, LayoutDashboard, List, Settings, WalletCards, LogOutIcon } from "lucide-react";
 
 export const SideBarOptions=[
     {
@@ -26,6 +26,7 @@ export const SideBarOptions=[
         icon:Settings,
         path:'/settings'
     },
+   
 ]
 
 export const InterviewType=[

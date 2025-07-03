@@ -16,11 +16,13 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { SideBarOptions } from "@/services/Constants";
-import { Plus } from "lucide-react";
+import { LogOutIcon, Plus } from "lucide-react";
+import { UserAuth } from "@/context/AuthContext";
 
 export function AppSidebar() {
   const router = useRouter();
   const path = usePathname();
+  const { signOut } = UserAuth();
 
   return (
     <Sidebar>
@@ -32,7 +34,7 @@ export function AppSidebar() {
           width={120}
           height={120}
           className="w-[120px] object-contain"
-          priority // Add if this is above-the-fold content
+          priority
         />
       </SidebarHeader>
 
@@ -54,16 +56,14 @@ export function AppSidebar() {
               <SidebarMenuItem key={index} className="p-1">
                 <SidebarMenuButton
                   asChild
-                  className={`p-3 ${
-                    path === option.path && "bg-blue-50"
-                  }`}
+                  className={`p-3 ${path === option.path && "bg-blue-50"
+                    }`}
                 >
                   <Link href={option.path} className="flex items-center gap-3">
                     <option.icon className="w-5 h-5" />
                     <span
-                      className={`text-base font-medium ${
-                        path == option.path && "text-primary"
-                      }`}
+                      className={`text-base font-medium ${path == option.path && "text-primary"
+                        }`}
                     >
                       {option.name}
                     </span>
@@ -75,7 +75,20 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter />
+      <SidebarFooter className="p-3">
+      <Button
+        className="px-5 cursor-pointer"
+        onClick={async () => {
+          await signOut();
+          router.push("/login");
+        }}
+      >
+        <LogOutIcon className="mr-2" />
+        Logout
+      </Button>
+
+
+</SidebarFooter>
     </Sidebar>
   );
 }
