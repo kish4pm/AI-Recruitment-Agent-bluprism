@@ -125,16 +125,16 @@ export const AuthContextProvider = ({ children }) => {
 
   if (session === undefined) {
     return (
-      <div className="p-4 flex items-center justify-center h-screen">
-        <div className="flex flex-col items-center gap-4">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-black">
-            <img 
-              src="/logo.png" 
-              alt="Loading"
-              className="h-12 w-12 mx-auto my-2"
-            />
-          </div>
-          <p className="text-sm text-gray-500">Loading your session...</p>
+      <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-80 z-50">
+        <div className="relative flex flex-col items-center">
+          <div className="absolute animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-black-500"></div>
+          <img 
+            src="/logo.png" 
+            className="rounded-full h-28 w-28"
+            alt="Loading indicator"
+          />
+          
+          <p className="mt-4 text-gray-600 animate-pulse">Loading session...</p>
         </div>
       </div>
     );

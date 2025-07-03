@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { supabase } from "@/services/supabaseClient";
+import { Mail, Lock, User2Icon } from "lucide-react";
 
 export function RegisterForm() {
   const { signUpNewUser } = UserAuth();
@@ -92,28 +93,38 @@ export function RegisterForm() {
         <div className="grid gap-6">
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="user@example.com"
-              ref={emailRef}
-              required
-            />
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <Input
+                id="email"
+                type="email"
+                placeholder="user@example.com"
+                ref={emailRef}
+                required
+                className="pl-10"
+              />
+            </div>
           </div>
 
           <div className="grid gap-2">
             <Label htmlFor="name">Full Name</Label>
+            <div className="relative">
+            <User2Icon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
             <Input
               id="name"
               type="text"
               placeholder="John Doe"
               ref={nameRef}
               required
+              className={"pl-10"}
             />
+            </div>
           </div>
 
           <div className="grid gap-2">
             <Label htmlFor="password">Password</Label>
+            <div className="relative">
+            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
             <Input
               id="password"
               type="password"
@@ -121,7 +132,9 @@ export function RegisterForm() {
               autoComplete="new-password"
               ref={passwordRef}
               required
+              className={"pl-10"}
             />
+            </div>
           </div>
 
           <div className="grid gap-2">

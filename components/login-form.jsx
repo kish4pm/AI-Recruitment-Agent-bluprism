@@ -7,6 +7,8 @@ import { useRouter } from "next/navigation";
 import { useState, useRef } from "react";
 import { toast } from "sonner";
 import { UserAuth } from "@/context/AuthContext";
+import { Mail, Lock } from "lucide-react";
+
 
 export function LoginForm(props) {
   const { className, ...rest } = props;
@@ -87,34 +89,45 @@ export function LoginForm(props) {
         <div className="grid gap-6">
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
+            <div className="relative">
+            <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
             <Input
               id="email"
               type="email"
               placeholder="user@example.com"
               required
               ref={emailRef}
+              className="pl-10"
             />
+            </div>
           </div>
   
           <div className="grid gap-2">
-            <div className="flex items-center">
-              <Label htmlFor="password">Password</Label>
-              <a
-                href="#"
-                className="ml-auto text-sm underline-offset-4 hover:underline"
-              >
-                Forgot your password?
-              </a>
-            </div>
-            <Input
-              id="password"
-              type="password"
-              placeholder="**********"
-              autoComplete="new-password"
-              required
-              ref={passwordRef}
-            />
-          </div>
+  {/* Password Label + Forgot Password Link */}
+  <div className="flex items-center">
+    <Label htmlFor="password">Password</Label>
+    <a
+      href="#"
+      className="ml-auto text-sm underline-offset-4 hover:underline"
+    >
+      Forgot your password?
+    </a>
+  </div>
+
+  {/* Password Input with Lock Icon */}
+  <div className="relative">
+    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+    <Input
+      id="password"
+      type="password"
+      placeholder="••••••••"
+      autoComplete="new-password"
+      required
+      ref={passwordRef}
+      className="pl-10"
+    />
+  </div>
+</div>
   
           <Button
             type="submit"
