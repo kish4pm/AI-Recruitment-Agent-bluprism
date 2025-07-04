@@ -23,7 +23,7 @@ export function RegisterForm() {
   const emailRef = useRef();
   const nameRef = useRef();
   const passwordRef = useRef();
-  const [role, setRole] = useState("candidate");
+  const [role, setRole] = useState(""); 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -52,37 +52,47 @@ export function RegisterForm() {
         name,
         role,
       });
-
+    
+      console.log("Signup result:", result);
+    
       if (result.success) {
         toast.success("Account created! Redirecting...");
-        navigate("/login");
+        router.push("/login");
       } else {
         setError(result.error);
-        toast.error("Email Already Exist");
+        toast.error(result.error || "Email already exists.");
       }
     } catch (err) {
-      toast.error("Email alredy exist.");
-    } finally {
-      setLoading(false);
+      console.error("Catch block error:", err);
+      toast.error("Unexpected error occurred.");
     }
+    
   };
 
-  const SignInWithGoogle = async () => {
+  const SignUpWithGoogle = async () => {
+    if (!role) {
+      toast.error("Please select a role first");
+      return;
+    }
+  
+    localStorage.setItem("pending_role", role); 
+  
     const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
+      provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/dashboard`,
+        redirectTo: `${window.location.origin}/auth/callback`,
       },
     });
-
+  
     if (error) {
-      toast.error("Google login failed: " + error.message);
+      toast.error("Google sign-up failed: " + error.message);
     } else {
-      toast.success("Redirecting to Google login...");
+      toast.success("Redirecting to Google...");
     }
   };
+    
 
-  return (
+    return (
     <div className="flex flex-col gap-6">
       <form onSubmit={handleSignUp} className="flex flex-col gap-6">
         <div className="flex flex-col items-center gap-2 text-center">
@@ -100,7 +110,7 @@ export function RegisterForm() {
                 type="email"
                 placeholder="user@example.com"
                 ref={emailRef}
-                required
+                
                 className="pl-10"
               />
             </div>
@@ -115,7 +125,6 @@ export function RegisterForm() {
               type="text"
               placeholder="John Doe"
               ref={nameRef}
-              required
               className={"pl-10"}
             />
             </div>
@@ -131,7 +140,6 @@ export function RegisterForm() {
               placeholder="**********"
               autoComplete="new-password"
               ref={passwordRef}
-              required
               className={"pl-10"}
             />
             </div>
@@ -139,7 +147,7 @@ export function RegisterForm() {
 
           <div className="grid gap-2">
             <Label htmlFor="role">Register as</Label>
-            <Select onValueChange={setRole}>
+            <Select onValueChange={setRole} value={role}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select role" />
               </SelectTrigger>
@@ -167,7 +175,7 @@ export function RegisterForm() {
         </span>
       </div>
 
-      <Button variant="outline" className="w-full cursor-pointer" onClick={SignInWithGoogle}>
+      <Button variant="outline" className="w-full cursor-pointer" onClick={SignUpWithGoogle}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="20"

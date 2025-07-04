@@ -77,7 +77,7 @@ function InterviewCard({ interview, viewDetail = false }) {
           </Button>
         </div>
       ) : (
-        <Link href={`/scheduled-interview/${interview?.interview_id}/details`} passHref legacyBehavior>
+        <Link href={`/recruiter/scheduled-interview/${interview?.interview_id}/details`} passHref legacyBehavior>
           <Button 
             as="a" 
             className="mt-4 sm:mt-5 w-full gap-2 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700 py-2 text-sm sm:text-base" 

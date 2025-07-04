@@ -4,6 +4,8 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { supabase } from "../services/supabaseClient";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { motion } from 'framer-motion';
+import Image from 'next/image';
 
 const AuthContext = createContext();
 
@@ -60,10 +62,29 @@ export const AuthContextProvider = ({ children }) => {
       if (error) {
         return { success: false, error: error.message };
       }
-      await fetchUserProfile(email);
+  
+      const { data: userData, error: profileError } = await supabase
+        .from("users")
+        .select("role")
+        .eq("email", email)
+        .single();
+  
+      if (profileError || !userData?.role) {
+        toast.error("Could not fetch user role.");
+        return { success: false, error: "Role not found." };
+      }
+  
+      // Optionally update global state:
+      setUserProfile(userData);
   
       toast.success("Logged in!");
-      window.location.href = "/dashboard";
+  
+      if (userData.role === "recruiter") {
+        window.location.href = "/recruiter/dashboard";
+      } else if (userData.role === "candidate") {
+        window.location.href = "/candidate/dashboard";
+      }
+  
       return { success: true, data };
     } catch (err) {
       return {
@@ -72,7 +93,7 @@ export const AuthContextProvider = ({ children }) => {
       };
     }
   };
-
+  
   // Sign up
   const signUpNewUser = async (email, password, { name, role }) => {
     try {
@@ -86,28 +107,38 @@ export const AuthContextProvider = ({ children }) => {
           },
         },
       });
-
-      if (authError) return { success: false, error: authError.message };
-
+  
+      console.log("SIGNUP response:", authData, authError);
+  
+      if (authError || !authData?.user?.id) {
+        return {
+          success: false,
+          error: authError?.message || "Signup failed. Please try again.",
+        };
+      }
+  
       const { error: insertError } = await supabase.from("users").insert([
         {
-          email,
+          email: email.toLowerCase(),
           name,
           role,
           picture: "https://cdn-icons-png.flaticon.com/512/149/149071.png",
           credits: 0,
         },
       ]);
-
-      if (insertError) return { success: false, error: insertError.message };
-
-      toast.success("Account created!");
+  
+      if (insertError) {
+        console.error("Insert error:", insertError);
+        return { success: false, error: insertError.message };
+      }
+  
       return { success: true, user: authData.user };
     } catch (err) {
-      return { success: false, error: err.message };
+      console.error("Sign up exception:", err);
+      return { success: false, error: "Unexpected error occurred." };
     }
   };
-
+    
   // Sign out
   const signOut = async () => {
     const { error } = await supabase.auth.signOut();
@@ -125,18 +156,26 @@ export const AuthContextProvider = ({ children }) => {
 
   if (session === undefined) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-80 z-50">
-        <div className="relative flex flex-col items-center">
-          <div className="absolute animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-black-500"></div>
-          <img 
-            src="/logo.png" 
-            className="rounded-full h-28 w-28"
-            alt="Loading indicator"
-          />
-          
-          <p className="mt-4 text-gray-600 animate-pulse">Loading session...</p>
-        </div>
+      <motion.div 
+      whileHover={{ scale: 1.02 }}
+      className="flex flex-col items-center mb-12 p-10"
+    >
+      <div className="relative w-28 h-28 mb-4">
+        <motion.div 
+          animate={{ rotate: 360 }}
+          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+          className="absolute inset-0 border-2 border-dashed border-indigo-200 rounded-full"
+        />
+        <Image 
+          src="/Suji.png" 
+          alt="Logo" 
+          fill
+          className="object-contain p-4"
+          priority
+        />
       </div>
+      <p className="mt-2 text-gray-500">Next-generation hiring experience</p>
+    </motion.div>
     );
   }
 

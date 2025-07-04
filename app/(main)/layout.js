@@ -1,19 +1,14 @@
 'use client';
 import React from 'react';
-import DashboardProvider from './provider';
-import WelcomeContainer from './dashboard/_components/WelcomeContainer';
-import { SpeedInsights } from '@vercel/speed-insights/next'; // Import SpeedInsights
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
-function DashboardLayout({ children }) {
+export default function MainLayout({ children }) {
   return (
-    <DashboardProvider>
-      <div className="p-10 w-full space-y-6">
-        <WelcomeContainer />
+    <div className="min-h-screen bg-gray-50 text-gray-900">
+      <main className="container mx-auto p-4">
         {children}
-      </div>
-      <SpeedInsights /> {/* Add SpeedInsights component */}
-    </DashboardProvider>
+      </main>
+      <SpeedInsights />
+    </div>
   );
 }
-
-export default DashboardLayout;

@@ -15,7 +15,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { SideBarOptions } from "@/services/Constants";
+import { SideBarCondidate, SideBarOptions } from "@/services/Constants";
 import { LogOutIcon, Plus } from "lucide-react";
 import { UserAuth } from "@/context/AuthContext";
 
@@ -38,21 +38,10 @@ export function AppSidebar() {
         />
       </SidebarHeader>
 
-      {/* Consistent Padding */}
-      <div className="px-4">
-        <Button
-          className="w-full cursor-pointer"
-          onClick={() => router.push("/dashboard/create-interview")}
-        >
-          <Plus className="mr-2" />
-          Create New Interview
-        </Button>
-      </div>
-
       <SidebarContent>
         <SidebarGroup>
           <SidebarMenu>
-            {SideBarOptions.map((option, index) => (
+            {SideBarCondidate.map((option, index) => (
               <SidebarMenuItem key={index} className="p-1">
                 <SidebarMenuButton
                   asChild

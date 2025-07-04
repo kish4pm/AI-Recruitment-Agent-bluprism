@@ -4,27 +4,46 @@ export const SideBarOptions=[
     {
         name:'Dashboard',
         icon:LayoutDashboard,
-        path:'/dashboard'
+        path:'/recruiter/dashboard'
     },
     {
         name:'Scheduled Interview',
         icon:Calendar,
-        path:'/scheduled-interview'
+        path:'/recruiter/scheduled-interview'
     },
     {
         name:'All Interview',
         icon:List,
-        path:'/all-interview'
+        path:'/recruiter/all-interview'
     },
     {
         name:'Billing',
         icon:WalletCards,
-        path:'/billing'
+        path:'/recruiter/billing'
     },
     {
         name:'Settings',
         icon:Settings,
-        path:'/settings'
+        path:'/recruiter/settings'
+    },
+   
+]
+
+export const SideBarCondidate=[
+    {
+        name:'Dashboard',
+        icon:LayoutDashboard,
+        path:'/candidate/dashboard'
+    },
+    {
+        name:'Profile',
+        icon:Calendar,
+        path:'/candidate/Profile'
+    },
+    {
+        name:'Settings',
+        icon:Settings,
+        path:'/candidate/settings'
     },
    
 ]

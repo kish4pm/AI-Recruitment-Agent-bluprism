@@ -8,7 +8,7 @@ import { useState, useRef } from "react";
 import { toast } from "sonner";
 import { UserAuth } from "@/context/AuthContext";
 import { Mail, Lock } from "lucide-react";
-
+import {supabase} from "@/services/supabaseClient"
 
 export function LoginForm(props) {
   const { className, ...rest } = props;
@@ -39,7 +39,7 @@ export function LoginForm(props) {
 
     try {
       const { success, error } = await signInUser(email, password);
-      
+
       if (!success) {
         toast.error(error || "Login failed. Please try again.");
         setLoading(false);
@@ -58,9 +58,9 @@ export function LoginForm(props) {
   // with google
   const SignInWithGoogle = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
+      provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/dashboard`,
+        redirectTo: `${window.location.origin}/auth/callback`, 
       },
     });
   
@@ -71,6 +71,7 @@ export function LoginForm(props) {
     }
   };
   
+
 
   return (
     <>
@@ -85,50 +86,50 @@ export function LoginForm(props) {
             Enter your email below to login to your account
           </p>
         </div>
-  
+
         <div className="grid gap-6">
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
             <div className="relative">
-            <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-            <Input
-              id="email"
-              type="email"
-              placeholder="user@example.com"
-              required
-              ref={emailRef}
-              className="pl-10"
-            />
+              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <Input
+                id="email"
+                type="email"
+                placeholder="user@example.com"
+                required
+                ref={emailRef}
+                className="pl-10"
+              />
             </div>
           </div>
-  
-          <div className="grid gap-2">
-  {/* Password Label + Forgot Password Link */}
-  <div className="flex items-center">
-    <Label htmlFor="password">Password</Label>
-    <a
-      href="#"
-      className="ml-auto text-sm underline-offset-4 hover:underline"
-    >
-      Forgot your password?
-    </a>
-  </div>
 
-  {/* Password Input with Lock Icon */}
-  <div className="relative">
-    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-    <Input
-      id="password"
-      type="password"
-      placeholder="••••••••"
-      autoComplete="new-password"
-      required
-      ref={passwordRef}
-      className="pl-10"
-    />
-  </div>
-</div>
-  
+          <div className="grid gap-2">
+            {/* Password Label + Forgot Password Link */}
+            <div className="flex items-center">
+              <Label htmlFor="password">Password</Label>
+              <a
+                href="#"
+                className="ml-auto text-sm underline-offset-4 hover:underline"
+              >
+                Forgot your password?
+              </a>
+            </div>
+
+            {/* Password Input with Lock Icon */}
+            <div className="relative">
+              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <Input
+                id="password"
+                type="password"
+                placeholder="••••••••"
+                autoComplete="new-password"
+                required
+                ref={passwordRef}
+                className="pl-10"
+              />
+            </div>
+          </div>
+
           <Button
             type="submit"
             className="w-full bg-black text-white hover:bg-gray-800 transition-colors duration-200 cursor-pointer"
@@ -136,7 +137,7 @@ export function LoginForm(props) {
           >
             {loading ? "Logging in..." : "Login"}
           </Button>
-  
+
           <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
             <span className="relative z-10 bg-background px-2 text-muted-foreground">
               Or continue with
@@ -144,7 +145,7 @@ export function LoginForm(props) {
           </div>
         </div>
       </form>
-  
+
       <div className="mt-4">
         <Button
           variant="outline"
@@ -177,7 +178,7 @@ export function LoginForm(props) {
           Login with Google
         </Button>
       </div>
-  
+
       <div className="text-center text-sm mt-4">
         Don’t have an account?{" "}
         <a
