@@ -9,6 +9,7 @@ import { supabase } from '@/services/supabaseClient';
 import { toast } from 'sonner';
 import { InterviewDataContext } from '@/context/InterviewDataContext';
 import { motion } from 'framer-motion';
+import { useUser } from '@/app/provider';
 
 function Interview() {
   const params = useParams();
@@ -25,19 +26,32 @@ function Interview() {
   const [loading, setLoading] = useState(false);
   const { interviewInfo, setInterviewInfo } = useContext(InterviewDataContext);
   const router = useRouter();
+  const [accessDenied, setAccessDenied] = useState(false);
+  const { user } = useUser();
 
   useEffect(() => {
     if (interview_id) GetInterviewDetails();
   }, [interview_id]);
 
   useEffect(() => {
-    const interviewData = async () => {
-      const { data: Interviews, error } = await supabase
-        .from('Users')
-        .select('email')
-        .eq('interview_id', interview_id);
-    }
-  }, []);
+    const checkAccess = async () => {
+      // 1. Get current session
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user) {
+        router.push("/login");
+        return;
+      }
+      // No email comparison, just require a session
+      setAccessDenied(false);
+    };
+    checkAccess();
+  }, [interviewData, interview_id]);
+
+  useEffect(() => {
+    if (user && !userEmail) setUserEmail(user.email || '');
+    if (user && !userName) setUserName(user.name || '');
+  }, [user]);
+
   const GetInterviewDetails = async () => {
     setLoading(true);
     try {
@@ -103,6 +117,17 @@ function Interview() {
     }
   };
 
+  if (accessDenied) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-red-600 mb-4">Access Denied</h2>
+          <p className="text-gray-600">You do not have permission to access this interview.</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-indigo-50/30 py-12 px-4 sm:px-6 lg:px-8">
       <motion.div 
@@ -122,8 +147,8 @@ function Interview() {
               transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
               className="absolute inset-0 border-2 border-dashed border-indigo-200 rounded-full"
             />
-            <Image 
-              src="/Suji.png" 
+            <Image
+              src="/Logo.png" 
               alt="Logo" 
               fill
               className="object-contain p-4"

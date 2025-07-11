@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -9,8 +9,15 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { supabase } from "@/services/supabaseClient";
+import { toast } from "sonner";
+import { Download } from "lucide-react";
 
 function CandidateFeedbackDialog({ candidate }) {
+  const [downloadingCV, setDownloadingCV] = useState(false);
+  const [cvAvailable, setCvAvailable] = useState(false);
+  const [cvFilePath, setCvFilePath] = useState(null);
+
   const feedback = candidate?.conversation_transcript?.feedback || {};
   const conversation_transcript = feedback?.conversation_transcript || {};
 
@@ -48,6 +55,75 @@ function CandidateFeedbackDialog({ candidate }) {
     if (score >= 5) return "Needs Improvement";
     return "Bad";
   };
+
+  // Function to fetch candidate's CV information
+  const fetchCandidateCV = async () => {
+    if (!candidate?.email) return;
+
+    try {
+      const { data: userData, error } = await supabase
+        .from('users')
+        .select('cv_file_path')
+        .eq('email', candidate.email)
+        .single();
+
+      if (error) {
+        console.error('Error fetching CV info:', error);
+        return;
+      }
+
+      if (userData?.cv_file_path) {
+        setCvFilePath(userData.cv_file_path);
+        setCvAvailable(true);
+      }
+    } catch (error) {
+      console.error('Error fetching candidate CV:', error);
+    }
+  };
+
+  // Function to download CV
+  const downloadCV = async () => {
+    if (!cvFilePath) {
+      toast.error('CV not available');
+      return;
+    }
+
+    setDownloadingCV(true);
+    try {
+      const { data, error } = await supabase.storage
+        .from('cv-uploads')
+        .download(cvFilePath);
+
+      if (error) {
+        throw error;
+      }
+
+      // Create a blob URL and trigger download
+      const blob = new Blob([data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${candidate?.fullname || 'candidate'}_CV.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      toast.success('CV downloaded successfully!');
+    } catch (error) {
+      console.error('Error downloading CV:', error);
+      toast.error('Failed to download CV');
+    } finally {
+      setDownloadingCV(false);
+    }
+  };
+
+  // Fetch CV info when dialog opens
+  React.useEffect(() => {
+    if (candidate?.email) {
+      fetchCandidateCV();
+    }
+  }, [candidate?.email]);
 
   const emailTemplates = {
     selected: `Subject: Congratulations! You've been selected for further evaluation
@@ -154,9 +230,23 @@ ${candidate?.email || "No Email"}`,
                     </h2>
                   </div>
                 </div>
-                <h2 className="text-primary text-2xl font-bold">
-                  {overallScore}/10
-                </h2>
+                <div className="flex items-center gap-3">
+                  <h2 className="text-primary text-2xl font-bold">
+                    {overallScore}/10
+                  </h2>
+                  {cvAvailable && (
+                    <Button
+                      onClick={downloadCV}
+                      disabled={downloadingCV}
+                      variant="outline"
+                      size="sm"
+                      className="flex items-center gap-2 text-green-600 border-green-600 hover:bg-green-50"
+                    >
+                      <Download className="w-4 h-4" />
+                      {downloadingCV ? 'Downloading...' : 'Download CV'}
+                    </Button>
+                  )}
+                </div>
               </div>
 
               {/* Skills Assessment */}

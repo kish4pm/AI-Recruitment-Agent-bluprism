@@ -7,10 +7,12 @@ import { ArrowRight, Brain, Users, Sparkles, Target, BarChart2, Clock, Zap, Chec
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/services/supabaseClient";
+import { useUser } from "@/app/provider";
 
 export default function Home() {
   const router = useRouter();
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
+  const { user } = useUser();
  
  
   /// lgoin wit hgoogle
@@ -18,7 +20,7 @@ export default function Home() {
     const { error } = await supabase.auth.signInWithOAuth({ 
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/dashboard`
+        redirectTo: `${window.location.origin}/auth/callback`
       }
     });
     if (error) console.error(error.message);
@@ -30,28 +32,15 @@ export default function Home() {
   };
 
   useEffect(() => {
-    // Check if user is already logged in
-    const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        router.push('/dashboard');
+    // If user is loaded and logged in, redirect based on role
+    if (user) {
+      if (user.role === 'recruiter') {
+        router.push('/recruiter/dashboard');
+      } else if (user.role === 'candidate') {
+        router.push('/candidate/dashboard');
       }
-    };
-    
-    checkSession();
-
-    const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (event === 'SIGNED_IN' && session) {
-        router.push('/dashboard');
-      }
-    });
-
-    return () => {
-      if (authListener?.unsubscribe) {
-        authListener.unsubscribe();
-      }
-    };
-  }, [router]);
+    }
+  }, [user, router]);
 
   const clientLogos = [
     { logo: "/clientLogos/tata.png" },

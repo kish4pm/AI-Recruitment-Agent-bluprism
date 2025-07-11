@@ -154,7 +154,7 @@ export default function UploadCV() {
       d="M7 16V4a1 1 0 011-1h8a1 1 0 011 1v12m-4 4h-4m4 0a2 2 0 004-2m-4 2a2 2 0 01-4-2"
     />
   </svg>
-  <span className="text-gray-800 font-medium">CV Uploaded</span>
+  <span className="text-gray-800 font-medium">CV Uploaded {user.cv_file_path}</span>
 </div>
 
             <button

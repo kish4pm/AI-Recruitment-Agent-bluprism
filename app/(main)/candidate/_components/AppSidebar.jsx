@@ -29,8 +29,8 @@ export function AppSidebar() {
       {/* Improved Logo Alignment */}
       <SidebarHeader className="flex items-center justify-center py-4 px-4">
         <Image
-          src="/Suji.png"
-          alt="Suji Logo"
+          src="/Logo.png"
+          alt=" Logo"
           width={120}
           height={120}
           className="w-[120px] object-contain"

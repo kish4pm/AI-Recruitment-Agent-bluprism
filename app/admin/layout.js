@@ -55,10 +55,14 @@ function AdminLayout({ children }) {
 
   if (user === undefined || isChecking) {
     return (
-      <div className="flex h-screen items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading admin panel...</p>
+      <div className="flex h-screen items-center justify-center bg-gradient-to-br from-blue-100 via-white to-indigo-100">
+        <div className="flex flex-col items-center gap-6 p-10 rounded-2xl shadow-lg bg-white/80 border border-blue-100">
+          <Shield className="w-16 h-16 text-blue-500 animate-bounce" />
+          <h2 className="text-2xl font-bold text-blue-700">Loading Admin Panel...</h2>
+          <p className="text-gray-500">Please wait while we verify your access.</p>
+          <div className="w-32 h-2 bg-blue-100 rounded-full overflow-hidden">
+            <div className="h-2 bg-blue-500 animate-pulse rounded-full w-1/2"></div>
+          </div>
         </div>
       </div>
     );
