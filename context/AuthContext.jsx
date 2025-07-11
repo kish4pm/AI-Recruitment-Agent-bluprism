@@ -62,16 +62,23 @@ export const AuthContextProvider = ({ children }) => {
       if (error) {
         return { success: false, error: error.message };
       }
-  
+
+      // Check if user is banned
       const { data: userData, error: profileError } = await supabase
         .from("users")
-        .select("role")
+        .select("role, banned")
         .eq("email", email)
         .single();
   
-      if (profileError || !userData?.role) {
-        toast.error("Could not fetch user role.");
-        return { success: false, error: "Role not found." };
+      if (profileError || !userData) {
+        toast.error("Could not fetch user profile.");
+        return { success: false, error: "Profile not found." };
+      }
+
+      // Check if user is banned
+      if (userData.banned) {
+        await supabase.auth.signOut();
+        return { success: false, error: "Your account has been banned. Please contact support for more information." };
       }
   
       // Optionally update global state:

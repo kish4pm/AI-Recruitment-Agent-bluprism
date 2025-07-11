@@ -23,23 +23,21 @@ function AdminLayout({ children }) {
     
     // If user is still loading (undefined), wait
     if (user === undefined) {
-      console.log('Admin Layout - User still loading...');
+      setIsChecking(true);
       return;
     }
     
-    // Check if user is admin (you can modify this logic based on your admin criteria)
+    // If user is not logged in, redirect to login
     if (!user) {
       console.log('Admin Layout - No user found, redirecting to admin login');
       router.push('/admin/login');
       return;
     }
     
-    // For now, let's assume admin emails are hardcoded or stored in a specific way
-    // You can modify this to check against a database field like user.role === 'admin'
-    const adminEmails = ['iennaceur9@gmail.com', 'iennaceur92@gmail.com']; // Add your admin emails
-    console.log('Admin Layout - Checking if', user.email, 'is in admin list:', adminEmails);
+    // Check if user email contains @admin
+    console.log('Admin Layout - Checking if', user.email, 'contains @admin');
     
-    if (!adminEmails.includes(user.email)) {
+    if (!user.email.includes('@admin')) {
       console.log('Admin Layout - User not admin, redirecting to dashboard');
       router.push('/dashboard');
       return;

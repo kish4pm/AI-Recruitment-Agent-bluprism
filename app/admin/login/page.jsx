@@ -22,8 +22,7 @@ function AdminLogin() {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
         // Check if user is admin
-        const adminEmails = ['iennaceur9@gmail.com', 'iennaceur92@gmail.com'];
-        if (adminEmails.includes(session.user.email)) {
+        if (session.user.email.includes('@admin')) {
           router.push('/admin');
         } else {
           router.push('/dashboard');
@@ -55,9 +54,26 @@ function AdminLogin() {
         return;
       }
 
+      // Check if user is banned
+      const { data: userData, error: profileError } = await supabase
+        .from("users")
+        .select("banned")
+        .eq("email", data.user.email)
+        .single();
+
+      if (profileError) {
+        toast.error('Could not fetch user profile.');
+        return;
+      }
+
+      if (userData.banned) {
+        await supabase.auth.signOut();
+        toast.error('Your account has been banned. Please contact support for more information.');
+        return;
+      }
+
       // Check if user is admin
-      const adminEmails = ['iennaceur9@gmail.com', 'iennaceur92@gmail.com'];
-      if (adminEmails.includes(data.user.email)) {
+      if (data.user.email.includes('@admin')) {
         toast.success('Welcome, Admin!');
         router.push('/admin');
       } else {
