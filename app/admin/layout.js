@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useUser } from '@/app/provider';
 import { useRouter, usePathname } from 'next/navigation';
 import { Shield } from 'lucide-react';
+import { supabase } from '@/services/supabaseClient';
 
 function AdminLayout({ children }) {
   const { user } = useUser();
@@ -37,9 +38,9 @@ function AdminLayout({ children }) {
     // Check if user email contains @admin
     console.log('Admin Layout - Checking if', user.email, 'contains @admin');
     
-    if (!user.email.includes('@admin')) {
-      console.log('Admin Layout - User not admin, redirecting to dashboard');
-      router.push('/dashboard');
+    if (!user.email.includes('@admin') && !user.email.includes('@superadmin')) {
+      console.log('Admin Layout - User not admin or superadmin, redirecting to dashboard');
+      router.push('/users');
       return;
     }
     
@@ -78,8 +79,8 @@ function AdminLayout({ children }) {
                 Welcome, {user?.name || 'Admin'}
               </span>
               <button
-                onClick={() => {
-                  // Add sign out logic here if needed
+                onClick={async () => {
+                  await supabase.auth.signOut();
                   router.push('/');
                 }}
                 className="text-sm text-gray-500 hover:text-gray-700"

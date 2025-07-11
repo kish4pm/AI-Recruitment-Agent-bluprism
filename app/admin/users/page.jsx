@@ -18,8 +18,11 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { useUser } from '@/app/provider';
 
 function UserManagement() {
+  const { user } = useUser();
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -27,6 +30,11 @@ function UserManagement() {
   const [sortBy, setSortBy] = useState('created_at');
   const [sortOrder, setSortOrder] = useState('desc');
   const [showBanned, setShowBanned] = useState(true);
+  const [showAddAdmin, setShowAddAdmin] = useState(false);
+  const [adminName, setAdminName] = useState('');
+  const [adminEmail, setAdminEmail] = useState('');
+  const [adminPassword, setAdminPassword] = useState('');
+  const [addingAdmin, setAddingAdmin] = useState(false);
 
   useEffect(() => {
     fetchUsers();
@@ -200,6 +208,69 @@ function UserManagement() {
     }
   };
 
+  // Add Admin Handler
+  const handleAddAdmin = async (e) => {
+    e.preventDefault();
+    if (!adminName || !adminEmail || !adminPassword) {
+      toast.error('Please fill in all fields');
+      return;
+    }
+    if (!adminEmail.includes('@admin') && !adminEmail.includes('@superadmin')) {
+      toast.error('Admin email must contain @admin or @superadmin');
+      return;
+    }
+    setAddingAdmin(true);
+    try {
+      // 1. Create user in Supabase Auth
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email: adminEmail,
+        password: adminPassword,
+        options: {
+          data: {
+            name: adminName,
+            role: 'admin',
+          },
+        },
+      });
+      if (authError) {
+        if (authError.message && authError.message.includes('User already registered')) {
+          toast.error('This email is already registered in Auth.');
+        } else {
+          toast.error(authError?.message || 'Failed to create admin in Auth.');
+        }
+        setAddingAdmin(false);
+        return;
+      }
+      // 2. Insert into users table (ignore duplicate error)
+      const { error: insertError } = await supabase.from('users').insert([
+        {
+          email: adminEmail,
+          name: adminName,
+          role: 'admin',
+          picture: 'https://cdn-icons-png.flaticon.com/512/149/149071.png',
+          credits: 0,
+        },
+      ]);
+      if (insertError && insertError.code !== '23505') { // 23505 = unique_violation
+        console.error('Insert error:', insertError);
+        alert(JSON.stringify(insertError, null, 2));
+        toast.error('Failed to add admin to users table.');
+        setAddingAdmin(false);
+        return;
+      }
+      toast.success('Admin added successfully!');
+      setShowAddAdmin(false);
+      setAdminName('');
+      setAdminEmail('');
+      setAdminPassword('');
+      fetchUsers();
+    } catch (err) {
+      toast.error('Unexpected error occurred.');
+    } finally {
+      setAddingAdmin(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -208,11 +279,48 @@ function UserManagement() {
           <h1 className="text-3xl font-bold text-gray-900">User Management</h1>
           <p className="text-gray-600 mt-1">Manage and monitor all registered users</p>
         </div>
-        <Button onClick={exportUsersToCSV}>
-          <Download className="w-4 h-4 mr-2" />
-          Export Users
-        </Button>
+        <div className="flex gap-2">
+          {user?.email?.includes('@superadmin') && (
+            <Button onClick={() => setShowAddAdmin(true)} className="bg-blue-600 text-white">
+              + Add Admin
+            </Button>
+          )}
+          <Button onClick={exportUsersToCSV}>
+            <Download className="w-4 h-4 mr-2" />
+            Export Users
+          </Button>
+        </div>
       </div>
+
+      {/* Add Admin Modal (only for superadmin) */}
+      {user?.email?.includes('@superadmin') && (
+        <Dialog open={showAddAdmin} onOpenChange={setShowAddAdmin}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Add New Admin</DialogTitle>
+            </DialogHeader>
+            <form onSubmit={handleAddAdmin} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">Name</label>
+                <Input value={adminName} onChange={e => setAdminName(e.target.value)} required />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Admin Email</label>
+                <Input type="email" value={adminEmail} onChange={e => setAdminEmail(e.target.value)} required placeholder="admin@admin.com" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Password</label>
+                <Input type="password" value={adminPassword} onChange={e => setAdminPassword(e.target.value)} required minLength={8} />
+              </div>
+              <DialogFooter>
+                <Button type="submit" disabled={addingAdmin} className="bg-blue-600 text-white w-full">
+                  {addingAdmin ? 'Adding...' : 'Add Admin'}
+                </Button>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
+      )}
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">

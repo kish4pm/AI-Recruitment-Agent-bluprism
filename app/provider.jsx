@@ -1,46 +1,51 @@
 "use client"
 import { UserDetailContext } from '@/context/UserDetailContext';
-import {supabase} from '@/services/supabaseClient'
-import React, {useState, useEffect, useContext} from 'react'
-
+import { supabase } from '@/services/supabaseClient';
+import React, { useState, useEffect, useContext } from 'react';
 
 function Provider({ children }) {
-
     const [user, setUser] = useState();
-    useEffect(()=>{
-        CreateNewUser();
-    },[])
 
-    const CreateNewUser = () =>{
-
-        supabase.auth.getUser().then(async ({data: {user}})=>{
-            //check if user exist
-            let {data : users, error} = await supabase
+    // Fetch user from Supabase and DB
+    const fetchAndSetUser = async () => {
+        const { data: { user: supaUser } } = await supabase.auth.getUser();
+        if (!supaUser) {
+            setUser(null);
+            return;
+        }
+        let { data: users, error } = await supabase
             .from('users')
-            .select('*').eq('email', user?.email);
-
-            console.log('Provider - Database users:', users);
-
-            if(users?.length === 0){      
-                //create new user
-                const {data, error: insertError} = await supabase.from('users')
+            .select('*')
+            .eq('email', supaUser.email);
+        if (users?.length === 0) {
+            // create new user
+            const { data, error: insertError } = await supabase.from('users')
                 .insert([
                     {
-                    name:user?.user_metadata?.name,
-                    email:user?.email,
-                    picture:user?.user_metadata?.picture
+                        name: supaUser?.user_metadata?.name,
+                        email: supaUser?.email,
+                        picture: supaUser?.user_metadata?.picture
                     }
                 ])
-                console.log('Provider - Insert result:', data);
-                console.log('Provider - Insert error:', insertError);
-                setUser(data?.[0] || null);
-                return;
-            }
-            setUser(users[0]);
-        })
-    }
+            setUser(data?.[0] || null);
+            return;
+        }
+        setUser(users[0]);
+    };
+
+    useEffect(() => {
+        fetchAndSetUser(); // Initial fetch
+        // Listen for auth state changes
+        const { data: listener } = supabase.auth.onAuthStateChange((_event, _session) => {
+            fetchAndSetUser();
+        });
+        return () => {
+            listener?.subscription?.unsubscribe();
+        };
+    }, []);
+
     return (
-        <UserDetailContext.Provider value={{user, setUser }}>
+        <UserDetailContext.Provider value={{ user, setUser }}>
             <div>{children}</div>
         </UserDetailContext.Provider>
     );
@@ -48,7 +53,7 @@ function Provider({ children }) {
 
 export default Provider;
 
-export const useUser=()=>{
-    const context=useContext(UserDetailContext);
+export const useUser = () => {
+    const context = useContext(UserDetailContext);
     return context;
 }

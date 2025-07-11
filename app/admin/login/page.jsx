@@ -22,10 +22,10 @@ function AdminLogin() {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
         // Check if user is admin
-        if (session.user.email.includes('@admin')) {
+        if (session.user.email.includes('@admin') || session.user.email.includes('@superadmin')) {
           router.push('/admin');
         } else {
-          router.push('/dashboard');
+          router.push('/users');
         }
       }
     };
@@ -72,8 +72,8 @@ function AdminLogin() {
         return;
       }
 
-      // Check if user is admin
-      if (data.user.email.includes('@admin')) {
+      // Check if user is admin or superadmin
+      if (data.user.email.includes('@admin') || data.user.email.includes('@superadmin')) {
         toast.success('Welcome, Admin!');
         router.push('/admin');
       } else {
@@ -118,7 +118,7 @@ function AdminLogin() {
           <div className="flex justify-center mb-4">
             <div className="relative w-16 h-16">
               <Image 
-                src="/Suji.png" 
+                src="/logo.png" 
                 alt="Logo" 
                 fill
                 className="object-contain"
