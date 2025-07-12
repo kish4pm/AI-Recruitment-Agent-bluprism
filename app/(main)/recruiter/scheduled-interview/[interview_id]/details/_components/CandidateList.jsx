@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import moment from "moment";
 import CandidateListFeedbackDialog from "./CandidateFeedbackDialog";
 import exportToCSV from "@/lib/exportToCSV"; // Ensure this path is correct
+import { supabase } from "@/services/supabaseClient";
+import Image from "next/image";
 
 function CandidateList({ candidateList }) {
+  const [candidatesWithPictures, setCandidatesWithPictures] = useState([]);
+
   // Function to calculate average rating (e.g., 6/10)
   const calculateRating = (candidate) => {
     const rating = candidate?.conversation_transcript?.feedback?.rating;
@@ -16,6 +20,44 @@ function CandidateList({ candidateList }) {
     return `${average}/10`;
   };
 
+  // Fetch candidate pictures
+  useEffect(() => {
+    const fetchCandidatePictures = async () => {
+      if (!candidateList || candidateList.length === 0) return;
+
+      try {
+        const candidatesWithPics = await Promise.all(
+          candidateList.map(async (candidate) => {
+            if (!candidate?.email) return candidate;
+
+            try {
+              const { data: userData, error } = await supabase
+                .from('users')
+                .select('picture')
+                .eq('email', candidate.email)
+                .single();
+
+              if (!error && userData?.picture) {
+                return { ...candidate, picture: userData.picture };
+              }
+            } catch (error) {
+              console.error('Error fetching candidate picture:', error);
+            }
+
+            return candidate;
+          })
+        );
+
+        setCandidatesWithPictures(candidatesWithPics);
+      } catch (error) {
+        console.error('Error fetching candidate pictures:', error);
+        setCandidatesWithPictures(candidateList);
+      }
+    };
+
+    fetchCandidatePictures();
+  }, [candidateList]);
+
   return (
     <div>
       <h2>Candidates ({candidateList?.length || 0})</h2>
@@ -27,16 +69,26 @@ function CandidateList({ candidateList }) {
         Download CSV
       </button>
 
-      {candidateList?.map((candidate, index) => (
+      {candidatesWithPictures?.map((candidate, index) => (
         <div
           key={index}
           className="p-5 flex gap-3 items-center justify-between bg-white border rounded-lg shadow-sm mt-5"
         >
-          <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
-            <h2 className="font-bold text-white">
-              {candidate?.fullname?.[0]?.toUpperCase() || "?"}
-            </h2>
-          </div>
+          {candidate?.picture ? (
+            <Image
+              src={candidate.picture}
+              alt={candidate?.fullname || "Candidate"}
+              width={40}
+              height={40}
+              className="rounded-full"
+            />
+          ) : (
+            <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
+              <h2 className="font-bold text-white">
+                {candidate?.fullname?.[0]?.toUpperCase() || "?"}
+              </h2>
+            </div>
+          )}
 
           <div>
             <h2 className="font-bold">{candidate?.fullname || "Unnamed Candidate"}</h2>

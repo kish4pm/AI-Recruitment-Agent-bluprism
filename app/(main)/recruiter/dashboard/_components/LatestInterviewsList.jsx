@@ -30,6 +30,10 @@ function LatestInterviewsList() {
     setInterviewList(Interviews);
   };
 
+  const handleInterviewDelete = () => {
+    // Refresh the interview list after deletion
+    GetInterviewList();
+  };
 
   return (
     <div className="my-5">
@@ -50,7 +54,11 @@ function LatestInterviewsList() {
         InterviewList &&
         <div className="grid grid-cols-2 xl:grid-cols-3 gap-5">
           {InterviewList.map((interview, index) => (
-            <InterviewCard interview={interview} key={index} />
+            <InterviewCard 
+              interview={interview} 
+              key={index} 
+              onDelete={handleInterviewDelete}
+            />
           ))}
         </div>
       )}

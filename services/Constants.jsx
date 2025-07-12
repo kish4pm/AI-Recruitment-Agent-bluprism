@@ -1,4 +1,4 @@
-import { BriefcaseBusinessIcon, Code2Icon, User2Icon, Component, Puzzle, Calendar, LayoutDashboard, List, Settings, WalletCards, LogOutIcon } from "lucide-react";
+import { BriefcaseBusinessIcon, Code2Icon, User2Icon, Component, Puzzle, Calendar, LayoutDashboard, List, Settings, WalletCards, LogOutIcon, Video } from "lucide-react";
 
 export const SideBarOptions=[
     {
@@ -15,6 +15,11 @@ export const SideBarOptions=[
         name:'All Interview',
         icon:List,
         path:'/recruiter/all-interview'
+    },
+    {
+        name:'Profile',
+        icon:User2Icon,
+        path:'/recruiter/profile'
     },
     {
         name:'Billing',
@@ -36,9 +41,14 @@ export const SideBarCondidate=[
         path:'/candidate/dashboard'
     },
     {
+        name:'Interviews',
+        icon:Video,
+        path:'/candidate/interviews'
+    },
+    {
         name:'Profile',
-        icon:Calendar,
-        path:'/candidate/Profile'
+        icon:User2Icon,
+        path:'/candidate/profile'
     },
     {
         name:'Settings',

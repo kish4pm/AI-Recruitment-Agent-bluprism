@@ -12,11 +12,13 @@ import { Progress } from "@/components/ui/progress";
 import { supabase } from "@/services/supabaseClient";
 import { toast } from "sonner";
 import { Download } from "lucide-react";
+import Image from "next/image";
 
 function CandidateFeedbackDialog({ candidate }) {
   const [downloadingCV, setDownloadingCV] = useState(false);
   const [cvAvailable, setCvAvailable] = useState(false);
   const [cvFilePath, setCvFilePath] = useState(null);
+  const [candidatePicture, setCandidatePicture] = useState(null);
 
   const feedback = candidate?.conversation_transcript?.feedback || {};
   const conversation_transcript = feedback?.conversation_transcript || {};
@@ -63,7 +65,7 @@ function CandidateFeedbackDialog({ candidate }) {
     try {
       const { data: userData, error } = await supabase
         .from('users')
-        .select('cv_file_path')
+        .select('cv_file_path, picture')
         .eq('email', candidate.email)
         .single();
 
@@ -75,6 +77,11 @@ function CandidateFeedbackDialog({ candidate }) {
       if (userData?.cv_file_path) {
         setCvFilePath(userData.cv_file_path);
         setCvAvailable(true);
+      }
+
+      // Set candidate picture
+      if (userData?.picture) {
+        setCandidatePicture(userData.picture);
       }
     } catch (error) {
       console.error('Error fetching candidate CV:', error);
@@ -218,11 +225,21 @@ ${candidate?.email || "No Email"}`,
               {/* Candidate Header */}
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
-                    <h2 className="text-white font-bold">
-                      {candidate?.fullname?.[0]?.toUpperCase() || "?"}
-                    </h2>
-                  </div>
+                  {candidatePicture ? (
+                    <Image
+                      src={candidatePicture}
+                      alt={candidate?.fullname || "Candidate"}
+                      width={40}
+                      height={40}
+                      className="rounded-full"
+                    />
+                  ) : (
+                    <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
+                      <h2 className="text-white font-bold">
+                        {candidate?.fullname?.[0]?.toUpperCase() || "?"}
+                      </h2>
+                    </div>
+                  )}
                   <div>
                     <h2 className="font-bold">{candidate?.fullname || "No Name"}</h2>
                     <h2 className="text-gray-500 text-sm">

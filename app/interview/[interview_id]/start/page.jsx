@@ -204,7 +204,7 @@ Key Guidelines:
             conversation_transcript: parsedTranscript,
             recommendations: "Not recommended",
             completed_at: new Date().toISOString(),
-          },
+and           },
         ]);
   
       if (insertError) {

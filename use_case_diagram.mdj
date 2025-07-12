@@ -1,0 +1,516 @@
+{
+  "_type": "Project",
+  "name": "AI Interview Platform - Use Case Diagram",
+  "ownedElements": [
+    {
+      "_type": "UMLModel",
+      "name": "AI Interview Platform",
+      "ownedElements": [
+        {
+          "_type": "UMLPackage",
+          "name": "AI Interview Platform",
+          "ownedElements": [
+            {
+              "_type": "UMLUseCaseDiagram",
+              "name": "Use Case Diagram",
+              "ownedViews": [
+                {
+                  "_type": "UMLUseCaseView",
+                  "model": {
+                    "_type": "UMLUseCase",
+                    "name": "Register Account",
+                    "visibility": "public"
+                  },
+                  "x": 100,
+                  "y": 100,
+                  "width": 120,
+                  "height": 60
+                },
+                {
+                  "_type": "UMLUseCaseView",
+                  "model": {
+                    "_type": "UMLUseCase",
+                    "name": "Login with Email/Password",
+                    "visibility": "public"
+                  },
+                  "x": 100,
+                  "y": 200,
+                  "width": 120,
+                  "height": 60
+                },
+                {
+                  "_type": "UMLUseCaseView",
+                  "model": {
+                    "_type": "UMLUseCase",
+                    "name": "Login with Google OAuth",
+                    "visibility": "public"
+                  },
+                  "x": 100,
+                  "y": 300,
+                  "width": 120,
+                  "height": 60
+                },
+                {
+                  "_type": "UMLUseCaseView",
+                  "model": {
+                    "_type": "UMLUseCase",
+                    "name": "Sign Out",
+                    "visibility": "public"
+                  },
+                  "x": 100,
+                  "y": 400,
+                  "width": 120,
+                  "height": 60
+                },
+                {
+                  "_type": "UMLUseCaseView",
+                  "model": {
+                    "_type": "UMLUseCase",
+                    "name": "Update Profile",
+                    "visibility": "public"
+                  },
+                  "x": 100,
+                  "y": 500,
+                  "width": 120,
+                  "height": 60
+                },
+                {
+                  "_type": "UMLUseCaseView",
+                  "model": {
+                    "_type": "UMLUseCase",
+                    "name": "Upload Profile Picture",
+                    "visibility": "public"
+                  },
+                  "x": 100,
+                  "y": 600,
+                  "width": 120,
+                  "height": 60
+                },
+                {
+                  "_type": "UMLUseCaseView",
+                  "model": {
+                    "_type": "UMLUseCase",
+                    "name": "Ban/Unban User",
+                    "visibility": "public"
+                  },
+                  "x": 300,
+                  "y": 100,
+                  "width": 120,
+                  "height": 60
+                },
+                {
+                  "_type": "UMLUseCaseView",
+                  "model": {
+                    "_type": "UMLUseCase",
+                    "name": "Delete User",
+                    "visibility": "public"
+                  },
+                  "x": 300,
+                  "y": 200,
+                  "width": 120,
+                  "height": 60
+                },
+                {
+                  "_type": "UMLUseCaseView",
+                  "model": {
+                    "_type": "UMLUseCase",
+                    "name": "Create Admin Account",
+                    "visibility": "public"
+                  },
+                  "x": 300,
+                  "y": 300,
+                  "width": 120,
+                  "height": 60
+                },
+                {
+                  "_type": "UMLUseCaseView",
+                  "model": {
+                    "_type": "UMLUseCase",
+                    "name": "Create Interview",
+                    "visibility": "public"
+                  },
+                  "x": 500,
+                  "y": 100,
+                  "width": 120,
+                  "height": 60
+                },
+                {
+                  "_type": "UMLUseCaseView",
+                  "model": {
+                    "_type": "UMLUseCase",
+                    "name": "Generate AI Questions",
+                    "visibility": "public"
+                  },
+                  "x": 500,
+                  "y": 200,
+                  "width": 120,
+                  "height": 60
+                },
+                {
+                  "_type": "UMLUseCaseView",
+                  "model": {
+                    "_type": "UMLUseCase",
+                    "name": "Share Interview Link",
+                    "visibility": "public"
+                  },
+                  "x": 500,
+                  "y": 300,
+                  "width": 120,
+                  "height": 60
+                },
+                {
+                  "_type": "UMLUseCaseView",
+                  "model": {
+                    "_type": "UMLUseCase",
+                    "name": "View Interview Results",
+                    "visibility": "public"
+                  },
+                  "x": 500,
+                  "y": 400,
+                  "width": 120,
+                  "height": 60
+                },
+                {
+                  "_type": "UMLUseCaseView",
+                  "model": {
+                    "_type": "UMLUseCase",
+                    "name": "Download CV",
+                    "visibility": "public"
+                  },
+                  "x": 500,
+                  "y": 500,
+                  "width": 120,
+                  "height": 60
+                },
+                {
+                  "_type": "UMLUseCaseView",
+                  "model": {
+                    "_type": "UMLUseCase",
+                    "name": "Manage Credits",
+                    "visibility": "public"
+                  },
+                  "x": 500,
+                  "y": 600,
+                  "width": 120,
+                  "height": 60
+                },
+                {
+                  "_type": "UMLUseCaseView",
+                  "model": {
+                    "_type": "UMLUseCase",
+                    "name": "Purchase Credits",
+                    "visibility": "public"
+                  },
+                  "x": 500,
+                  "y": 700,
+                  "width": 120,
+                  "height": 60
+                },
+                {
+                  "_type": "UMLUseCaseView",
+                  "model": {
+                    "_type": "UMLUseCase",
+                    "name": "Delete Interview",
+                    "visibility": "public"
+                  },
+                  "x": 500,
+                  "y": 800,
+                  "width": 120,
+                  "height": 60
+                },
+                {
+                  "_type": "UMLUseCaseView",
+                  "model": {
+                    "_type": "UMLUseCase",
+                    "name": "View Dashboard",
+                    "visibility": "public"
+                  },
+                  "x": 500,
+                  "y": 900,
+                  "width": 120,
+                  "height": 60
+                },
+                {
+                  "_type": "UMLUseCaseView",
+                  "model": {
+                    "_type": "UMLUseCase",
+                    "name": "View All Interviews",
+                    "visibility": "public"
+                  },
+                  "x": 500,
+                  "y": 1000,
+                  "width": 120,
+                  "height": 60
+                },
+                {
+                  "_type": "UMLUseCaseView",
+                  "model": {
+                    "_type": "UMLUseCase",
+                    "name": "Join Interview",
+                    "visibility": "public"
+                  },
+                  "x": 700,
+                  "y": 100,
+                  "width": 120,
+                  "height": 60
+                },
+                {
+                  "_type": "UMLUseCaseView",
+                  "model": {
+                    "_type": "UMLUseCase",
+                    "name": "Participate in Voice Interview",
+                    "visibility": "public"
+                  },
+                  "x": 700,
+                  "y": 200,
+                  "width": 120,
+                  "height": 60
+                },
+                {
+                  "_type": "UMLUseCaseView",
+                  "model": {
+                    "_type": "UMLUseCase",
+                    "name": "View Interview History",
+                    "visibility": "public"
+                  },
+                  "x": 700,
+                  "y": 300,
+                  "width": 120,
+                  "height": 60
+                },
+                {
+                  "_type": "UMLUseCaseView",
+                  "model": {
+                    "_type": "UMLUseCase",
+                    "name": "Upload CV",
+                    "visibility": "public"
+                  },
+                  "x": 700,
+                  "y": 400,
+                  "width": 120,
+                  "height": 60
+                },
+                {
+                  "_type": "UMLUseCaseView",
+                  "model": {
+                    "_type": "UMLUseCase",
+                    "name": "View Feedback",
+                    "visibility": "public"
+                  },
+                  "x": 700,
+                  "y": 500,
+                  "width": 120,
+                  "height": 60
+                },
+                {
+                  "_type": "UMLUseCaseView",
+                  "model": {
+                    "_type": "UMLUseCase",
+                    "name": "View Interview Status",
+                    "visibility": "public"
+                  },
+                  "x": 700,
+                  "y": 600,
+                  "width": 120,
+                  "height": 60
+                },
+                {
+                  "_type": "UMLUseCaseView",
+                  "model": {
+                    "_type": "UMLUseCase",
+                    "name": "View All Users",
+                    "visibility": "public"
+                  },
+                  "x": 900,
+                  "y": 100,
+                  "width": 120,
+                  "height": 60
+                },
+                {
+                  "_type": "UMLUseCaseView",
+                  "model": {
+                    "_type": "UMLUseCase",
+                    "name": "View All Interviews",
+                    "visibility": "public"
+                  },
+                  "x": 900,
+                  "y": 200,
+                  "width": 120,
+                  "height": 60
+                },
+                {
+                  "_type": "UMLUseCaseView",
+                  "model": {
+                    "_type": "UMLUseCase",
+                    "name": "Export Data to CSV",
+                    "visibility": "public"
+                  },
+                  "x": 900,
+                  "y": 300,
+                  "width": 120,
+                  "height": 60
+                },
+                {
+                  "_type": "UMLUseCaseView",
+                  "model": {
+                    "_type": "UMLUseCase",
+                    "name": "View Analytics",
+                    "visibility": "public"
+                  },
+                  "x": 900,
+                  "y": 400,
+                  "width": 120,
+                  "height": 60
+                },
+                {
+                  "_type": "UMLUseCaseView",
+                  "model": {
+                    "_type": "UMLUseCase",
+                    "name": "Manage System",
+                    "visibility": "public"
+                  },
+                  "x": 900,
+                  "y": 500,
+                  "width": 120,
+                  "height": 60
+                },
+                {
+                  "_type": "UMLUseCaseView",
+                  "model": {
+                    "_type": "UMLUseCase",
+                    "name": "Generate Interview Questions",
+                    "visibility": "public"
+                  },
+                  "x": 1100,
+                  "y": 100,
+                  "width": 120,
+                  "height": 60
+                },
+                {
+                  "_type": "UMLUseCaseView",
+                  "model": {
+                    "_type": "UMLUseCase",
+                    "name": "Conduct Voice Interview",
+                    "visibility": "public"
+                  },
+                  "x": 1100,
+                  "y": 200,
+                  "width": 120,
+                  "height": 60
+                },
+                {
+                  "_type": "UMLUseCaseView",
+                  "model": {
+                    "_type": "UMLUseCase",
+                    "name": "Generate Feedback",
+                    "visibility": "public"
+                  },
+                  "x": 1100,
+                  "y": 300,
+                  "width": 120,
+                  "height": 60
+                },
+                {
+                  "_type": "UMLUseCaseView",
+                  "model": {
+                    "_type": "UMLUseCase",
+                    "name": "Analyze Responses",
+                    "visibility": "public"
+                  },
+                  "x": 1100,
+                  "y": 400,
+                  "width": 120,
+                  "height": 60
+                },
+                {
+                  "_type": "UMLUseCaseView",
+                  "model": {
+                    "_type": "UMLUseCase",
+                    "name": "Provide Recommendations",
+                    "visibility": "public"
+                  },
+                  "x": 1100,
+                  "y": 500,
+                  "width": 120,
+                  "height": 60
+                },
+                {
+                  "_type": "UMLActorView",
+                  "model": {
+                    "_type": "UMLActor",
+                    "name": "Recruiter",
+                    "visibility": "public"
+                  },
+                  "x": 50,
+                  "y": 50,
+                  "width": 30,
+                  "height": 60
+                },
+                {
+                  "_type": "UMLActorView",
+                  "model": {
+                    "_type": "UMLActor",
+                    "name": "Candidate",
+                    "visibility": "public"
+                  },
+                  "x": 50,
+                  "y": 150,
+                  "width": 30,
+                  "height": 60
+                },
+                {
+                  "_type": "UMLActorView",
+                  "model": {
+                    "_type": "UMLActor",
+                    "name": "Admin",
+                    "visibility": "public"
+                  },
+                  "x": 50,
+                  "y": 250,
+                  "width": 30,
+                  "height": 60
+                },
+                {
+                  "_type": "UMLActorView",
+                  "model": {
+                    "_type": "UMLActor",
+                    "name": "SuperAdmin",
+                    "visibility": "public"
+                  },
+                  "x": 50,
+                  "y": 350,
+                  "width": 30,
+                  "height": 60
+                },
+                {
+                  "_type": "UMLActorView",
+                  "model": {
+                    "_type": "UMLActor",
+                    "name": "AI System",
+                    "visibility": "public"
+                  },
+                  "x": 50,
+                  "y": 450,
+                  "width": 30,
+                  "height": 60
+                },
+                {
+                  "_type": "UMLActorView",
+                  "model": {
+                    "_type": "UMLActor",
+                    "name": "Google OAuth",
+                    "visibility": "public"
+                  },
+                  "x": 50,
+                  "y": 550,
+                  "width": 30,
+                  "height": 60
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+} 

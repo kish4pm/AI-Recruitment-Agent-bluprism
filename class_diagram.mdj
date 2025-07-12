@@ -1,0 +1,965 @@
+{
+  "_type": "Project",
+  "name": "AI Interview Platform - Class Diagram",
+  "ownedElements": [
+    {
+      "_type": "UMLModel",
+      "name": "AI Interview Platform",
+      "ownedElements": [
+        {
+          "_type": "UMLPackage",
+          "name": "AI Interview Platform",
+          "ownedElements": [
+            {
+              "_type": "UMLClassDiagram",
+              "name": "Class Diagram",
+              "ownedViews": [
+                {
+                  "_type": "UMLClassView",
+                  "model": {
+                    "_type": "UMLClass",
+                    "name": "User",
+                    "visibility": "public",
+                    "attributes": [
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "id",
+                        "type": "String",
+                        "visibility": "private"
+                      },
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "email",
+                        "type": "String",
+                        "visibility": "private"
+                      },
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "name",
+                        "type": "String",
+                        "visibility": "private"
+                      },
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "role",
+                        "type": "String",
+                        "visibility": "private"
+                      },
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "picture",
+                        "type": "String",
+                        "visibility": "private"
+                      },
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "credits",
+                        "type": "Integer",
+                        "visibility": "private"
+                      },
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "banned",
+                        "type": "Boolean",
+                        "visibility": "private"
+                      },
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "created_at",
+                        "type": "Date",
+                        "visibility": "private"
+                      },
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "cv_file_path",
+                        "type": "String",
+                        "visibility": "private"
+                      }
+                    ],
+                    "operations": [
+                      {
+                        "_type": "UMLOperation",
+                        "name": "updateProfile",
+                        "visibility": "public"
+                      },
+                      {
+                        "_type": "UMLOperation",
+                        "name": "updateCredits",
+                        "visibility": "public"
+                      },
+                      {
+                        "_type": "UMLOperation",
+                        "name": "uploadCV",
+                        "visibility": "public"
+                      },
+                      {
+                        "_type": "UMLOperation",
+                        "name": "isBanned",
+                        "visibility": "public"
+                      }
+                    ]
+                  },
+                  "x": 100,
+                  "y": 100,
+                  "width": 200,
+                  "height": 300
+                },
+                {
+                  "_type": "UMLClassView",
+                  "model": {
+                    "_type": "UMLClass",
+                    "name": "Interview",
+                    "visibility": "public",
+                    "attributes": [
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "id",
+                        "type": "String",
+                        "visibility": "private"
+                      },
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "interview_id",
+                        "type": "String",
+                        "visibility": "private"
+                      },
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "userEmail",
+                        "type": "String",
+                        "visibility": "private"
+                      },
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "jobPosition",
+                        "type": "String",
+                        "visibility": "private"
+                      },
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "jobDescription",
+                        "type": "String",
+                        "visibility": "private"
+                      },
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "type",
+                        "type": "String",
+                        "visibility": "private"
+                      },
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "duration",
+                        "type": "Integer",
+                        "visibility": "private"
+                      },
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "questionList",
+                        "type": "Object",
+                        "visibility": "private"
+                      },
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "created_at",
+                        "type": "Date",
+                        "visibility": "private"
+                      }
+                    ],
+                    "operations": [
+                      {
+                        "_type": "UMLOperation",
+                        "name": "createInterview",
+                        "visibility": "public"
+                      },
+                      {
+                        "_type": "UMLOperation",
+                        "name": "deleteInterview",
+                        "visibility": "public"
+                      },
+                      {
+                        "_type": "UMLOperation",
+                        "name": "generateQuestions",
+                        "visibility": "public"
+                      },
+                      {
+                        "_type": "UMLOperation",
+                        "name": "getResults",
+                        "visibility": "public"
+                      }
+                    ]
+                  },
+                  "x": 400,
+                  "y": 100,
+                  "width": 200,
+                  "height": 300
+                },
+                {
+                  "_type": "UMLClassView",
+                  "model": {
+                    "_type": "UMLClass",
+                    "name": "InterviewResult",
+                    "visibility": "public",
+                    "attributes": [
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "id",
+                        "type": "String",
+                        "visibility": "private"
+                      },
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "interview_id",
+                        "type": "String",
+                        "visibility": "private"
+                      },
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "email",
+                        "type": "String",
+                        "visibility": "private"
+                      },
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "fullname",
+                        "type": "String",
+                        "visibility": "private"
+                      },
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "conversation_transcript",
+                        "type": "Object",
+                        "visibility": "private"
+                      },
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "recommendations",
+                        "type": "String",
+                        "visibility": "private"
+                      },
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "score",
+                        "type": "Integer",
+                        "visibility": "private"
+                      },
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "status",
+                        "type": "String",
+                        "visibility": "private"
+                      },
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "completed_at",
+                        "type": "Date",
+                        "visibility": "private"
+                      },
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "duration",
+                        "type": "Integer",
+                        "visibility": "private"
+                      }
+                    ],
+                    "operations": [
+                      {
+                        "_type": "UMLOperation",
+                        "name": "saveResult",
+                        "visibility": "public"
+                      },
+                      {
+                        "_type": "UMLOperation",
+                        "name": "generateFeedback",
+                        "visibility": "public"
+                      },
+                      {
+                        "_type": "UMLOperation",
+                        "name": "calculateScore",
+                        "visibility": "public"
+                      }
+                    ]
+                  },
+                  "x": 700,
+                  "y": 100,
+                  "width": 200,
+                  "height": 300
+                },
+                {
+                  "_type": "UMLClassView",
+                  "model": {
+                    "_type": "UMLClass",
+                    "name": "AuthContext",
+                    "visibility": "public",
+                    "attributes": [
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "session",
+                        "type": "Object",
+                        "visibility": "private"
+                      },
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "userProfile",
+                        "type": "Object",
+                        "visibility": "private"
+                      }
+                    ],
+                    "operations": [
+                      {
+                        "_type": "UMLOperation",
+                        "name": "signInUser",
+                        "visibility": "public"
+                      },
+                      {
+                        "_type": "UMLOperation",
+                        "name": "signUpNewUser",
+                        "visibility": "public"
+                      },
+                      {
+                        "_type": "UMLOperation",
+                        "name": "signOut",
+                        "visibility": "public"
+                      },
+                      {
+                        "_type": "UMLOperation",
+                        "name": "fetchUserProfile",
+                        "visibility": "public"
+                      }
+                    ]
+                  },
+                  "x": 100,
+                  "y": 500,
+                  "width": 200,
+                  "height": 200
+                },
+                {
+                  "_type": "UMLClassView",
+                  "model": {
+                    "_type": "UMLClass",
+                    "name": "UserDetailContext",
+                    "visibility": "public",
+                    "attributes": [
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "user",
+                        "type": "Object",
+                        "visibility": "private"
+                      }
+                    ],
+                    "operations": [
+                      {
+                        "_type": "UMLOperation",
+                        "name": "setUser",
+                        "visibility": "public"
+                      },
+                      {
+                        "_type": "UMLOperation",
+                        "name": "updateUserCredits",
+                        "visibility": "public"
+                      },
+                      {
+                        "_type": "UMLOperation",
+                        "name": "fetchAndSetUser",
+                        "visibility": "public"
+                      }
+                    ]
+                  },
+                  "x": 400,
+                  "y": 500,
+                  "width": 200,
+                  "height": 200
+                },
+                {
+                  "_type": "UMLClassView",
+                  "model": {
+                    "_type": "UMLClass",
+                    "name": "InterviewDataContext",
+                    "visibility": "public",
+                    "attributes": [
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "interviewInfo",
+                        "type": "Object",
+                        "visibility": "private"
+                      }
+                    ],
+                    "operations": [
+                      {
+                        "_type": "UMLOperation",
+                        "name": "setInterviewInfo",
+                        "visibility": "public"
+                      }
+                    ]
+                  },
+                  "x": 700,
+                  "y": 500,
+                  "width": 200,
+                  "height": 200
+                },
+                {
+                  "_type": "UMLClassView",
+                  "model": {
+                    "_type": "UMLClass",
+                    "name": "SupabaseClient",
+                    "visibility": "public",
+                    "attributes": [
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "url",
+                        "type": "String",
+                        "visibility": "private"
+                      },
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "anonKey",
+                        "type": "String",
+                        "visibility": "private"
+                      }
+                    ],
+                    "operations": [
+                      {
+                        "_type": "UMLOperation",
+                        "name": "createClient",
+                        "visibility": "public"
+                      },
+                      {
+                        "_type": "UMLOperation",
+                        "name": "auth",
+                        "visibility": "public"
+                      },
+                      {
+                        "_type": "UMLOperation",
+                        "name": "from",
+                        "visibility": "public"
+                      }
+                    ]
+                  },
+                  "x": 100,
+                  "y": 800,
+                  "width": 200,
+                  "height": 200
+                },
+                {
+                  "_type": "UMLClassView",
+                  "model": {
+                    "_type": "UMLClass",
+                    "name": "VapiClient",
+                    "visibility": "public",
+                    "attributes": [
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "apiKey",
+                        "type": "String",
+                        "visibility": "private"
+                      }
+                    ],
+                    "operations": [
+                      {
+                        "_type": "UMLOperation",
+                        "name": "start",
+                        "visibility": "public"
+                      },
+                      {
+                        "_type": "UMLOperation",
+                        "name": "stop",
+                        "visibility": "public"
+                      },
+                      {
+                        "_type": "UMLOperation",
+                        "name": "on",
+                        "visibility": "public"
+                      },
+                      {
+                        "_type": "UMLOperation",
+                        "name": "off",
+                        "visibility": "public"
+                      }
+                    ]
+                  },
+                  "x": 400,
+                  "y": 800,
+                  "width": 200,
+                  "height": 200
+                },
+                {
+                  "_type": "UMLClassView",
+                  "model": {
+                    "_type": "UMLClass",
+                    "name": "AIService",
+                    "visibility": "public",
+                    "attributes": [
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "openaiKey",
+                        "type": "String",
+                        "visibility": "private"
+                      }
+                    ],
+                    "operations": [
+                      {
+                        "_type": "UMLOperation",
+                        "name": "generateQuestions",
+                        "visibility": "public"
+                      },
+                      {
+                        "_type": "UMLOperation",
+                        "name": "generateFeedback",
+                        "visibility": "public"
+                      },
+                      {
+                        "_type": "UMLOperation",
+                        "name": "analyzeResponse",
+                        "visibility": "public"
+                      }
+                    ]
+                  },
+                  "x": 700,
+                  "y": 800,
+                  "width": 200,
+                  "height": 200
+                },
+                {
+                  "_type": "UMLClassView",
+                  "model": {
+                    "_type": "UMLClass",
+                    "name": "BanUserAPI",
+                    "visibility": "public",
+                    "operations": [
+                      {
+                        "_type": "UMLOperation",
+                        "name": "POST",
+                        "visibility": "public"
+                      },
+                      {
+                        "_type": "UMLOperation",
+                        "name": "validateAdmin",
+                        "visibility": "public"
+                      },
+                      {
+                        "_type": "UMLOperation",
+                        "name": "updateBanStatus",
+                        "visibility": "public"
+                      }
+                    ]
+                  },
+                  "x": 1000,
+                  "y": 100,
+                  "width": 200,
+                  "height": 150
+                },
+                {
+                  "_type": "UMLClassView",
+                  "model": {
+                    "_type": "UMLClass",
+                    "name": "AIFeedbackAPI",
+                    "visibility": "public",
+                    "operations": [
+                      {
+                        "_type": "UMLOperation",
+                        "name": "POST",
+                        "visibility": "public"
+                      },
+                      {
+                        "_type": "UMLOperation",
+                        "name": "processConversation",
+                        "visibility": "public"
+                      },
+                      {
+                        "_type": "UMLOperation",
+                        "name": "generateFeedback",
+                        "visibility": "public"
+                      }
+                    ]
+                  },
+                  "x": 1000,
+                  "y": 300,
+                  "width": 200,
+                  "height": 150
+                },
+                {
+                  "_type": "UMLClassView",
+                  "model": {
+                    "_type": "UMLClass",
+                    "name": "AIModelAPI",
+                    "visibility": "public",
+                    "operations": [
+                      {
+                        "_type": "UMLOperation",
+                        "name": "POST",
+                        "visibility": "public"
+                      },
+                      {
+                        "_type": "UMLOperation",
+                        "name": "generateQuestions",
+                        "visibility": "public"
+                      },
+                      {
+                        "_type": "UMLOperation",
+                        "name": "formatResponse",
+                        "visibility": "public"
+                      }
+                    ]
+                  },
+                  "x": 1000,
+                  "y": 500,
+                  "width": 200,
+                  "height": 150
+                },
+                {
+                  "_type": "UMLClassView",
+                  "model": {
+                    "_type": "UMLClass",
+                    "name": "LoginForm",
+                    "visibility": "public",
+                    "attributes": [
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "email",
+                        "type": "String",
+                        "visibility": "private"
+                      },
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "password",
+                        "type": "String",
+                        "visibility": "private"
+                      },
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "loading",
+                        "type": "Boolean",
+                        "visibility": "private"
+                      }
+                    ],
+                    "operations": [
+                      {
+                        "_type": "UMLOperation",
+                        "name": "handleSubmit",
+                        "visibility": "public"
+                      },
+                      {
+                        "_type": "UMLOperation",
+                        "name": "signInWithGoogle",
+                        "visibility": "public"
+                      }
+                    ]
+                  },
+                  "x": 1000,
+                  "y": 700,
+                  "width": 200,
+                  "height": 200
+                },
+                {
+                  "_type": "UMLClassView",
+                  "model": {
+                    "_type": "UMLClass",
+                    "name": "RegisterForm",
+                    "visibility": "public",
+                    "attributes": [
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "email",
+                        "type": "String",
+                        "visibility": "private"
+                      },
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "name",
+                        "type": "String",
+                        "visibility": "private"
+                      },
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "password",
+                        "type": "String",
+                        "visibility": "private"
+                      },
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "role",
+                        "type": "String",
+                        "visibility": "private"
+                      }
+                    ],
+                    "operations": [
+                      {
+                        "_type": "UMLOperation",
+                        "name": "handleSignUp",
+                        "visibility": "public"
+                      },
+                      {
+                        "_type": "UMLOperation",
+                        "name": "signUpWithGoogle",
+                        "visibility": "public"
+                      }
+                    ]
+                  },
+                  "x": 1300,
+                  "y": 100,
+                  "width": 200,
+                  "height": 200
+                },
+                {
+                  "_type": "UMLClassView",
+                  "model": {
+                    "_type": "UMLClass",
+                    "name": "InterviewCard",
+                    "visibility": "public",
+                    "attributes": [
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "interview",
+                        "type": "Object",
+                        "visibility": "private"
+                      },
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "viewDetail",
+                        "type": "Boolean",
+                        "visibility": "private"
+                      }
+                    ],
+                    "operations": [
+                      {
+                        "_type": "UMLOperation",
+                        "name": "handleDelete",
+                        "visibility": "public"
+                      },
+                      {
+                        "_type": "UMLOperation",
+                        "name": "viewDetails",
+                        "visibility": "public"
+                      }
+                    ]
+                  },
+                  "x": 1300,
+                  "y": 400,
+                  "width": 200,
+                  "height": 200
+                },
+                {
+                  "_type": "UMLClassView",
+                  "model": {
+                    "_type": "UMLClass",
+                    "name": "CreateInterviewForm",
+                    "visibility": "public",
+                    "attributes": [
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "formData",
+                        "type": "Object",
+                        "visibility": "private"
+                      },
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "step",
+                        "type": "Integer",
+                        "visibility": "private"
+                      },
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "interviewId",
+                        "type": "String",
+                        "visibility": "private"
+                      }
+                    ],
+                    "operations": [
+                      {
+                        "_type": "UMLOperation",
+                        "name": "handleInputChange",
+                        "visibility": "public"
+                      },
+                      {
+                        "_type": "UMLOperation",
+                        "name": "generateQuestions",
+                        "visibility": "public"
+                      },
+                      {
+                        "_type": "UMLOperation",
+                        "name": "createInterview",
+                        "visibility": "public"
+                      }
+                    ]
+                  },
+                  "x": 1300,
+                  "y": 700,
+                  "width": 200,
+                  "height": 200
+                },
+                {
+                  "_type": "UMLClassView",
+                  "model": {
+                    "_type": "UMLClass",
+                    "name": "StartInterview",
+                    "visibility": "public",
+                    "attributes": [
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "interviewInfo",
+                        "type": "Object",
+                        "visibility": "private"
+                      },
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "start",
+                        "type": "Boolean",
+                        "visibility": "private"
+                      },
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "subtitles",
+                        "type": "String",
+                        "visibility": "private"
+                      },
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "isSpeaking",
+                        "type": "Boolean",
+                        "visibility": "private"
+                      }
+                    ],
+                    "operations": [
+                      {
+                        "_type": "UMLOperation",
+                        "name": "startCall",
+                        "visibility": "public"
+                      },
+                      {
+                        "_type": "UMLOperation",
+                        "name": "stopInterview",
+                        "visibility": "public"
+                      },
+                      {
+                        "_type": "UMLOperation",
+                        "name": "generateFeedback",
+                        "visibility": "public"
+                      }
+                    ]
+                  },
+                  "x": 1600,
+                  "y": 100,
+                  "width": 200,
+                  "height": 200
+                },
+                {
+                  "_type": "UMLClassView",
+                  "model": {
+                    "_type": "UMLClass",
+                    "name": "AdminLayout",
+                    "visibility": "public",
+                    "attributes": [
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "user",
+                        "type": "Object",
+                        "visibility": "private"
+                      },
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "pathname",
+                        "type": "String",
+                        "visibility": "private"
+                      },
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "isChecking",
+                        "type": "Boolean",
+                        "visibility": "private"
+                      }
+                    ],
+                    "operations": [
+                      {
+                        "_type": "UMLOperation",
+                        "name": "checkAuthentication",
+                        "visibility": "public"
+                      },
+                      {
+                        "_type": "UMLOperation",
+                        "name": "checkBanStatus",
+                        "visibility": "public"
+                      },
+                      {
+                        "_type": "UMLOperation",
+                        "name": "redirectToLogin",
+                        "visibility": "public"
+                      }
+                    ]
+                  },
+                  "x": 1600,
+                  "y": 400,
+                  "width": 200,
+                  "height": 200
+                },
+                {
+                  "_type": "UMLClassView",
+                  "model": {
+                    "_type": "UMLClass",
+                    "name": "RecruiterLayout",
+                    "visibility": "public",
+                    "attributes": [
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "user",
+                        "type": "Object",
+                        "visibility": "private"
+                      }
+                    ],
+                    "operations": [
+                      {
+                        "_type": "UMLOperation",
+                        "name": "renderSidebar",
+                        "visibility": "public"
+                      },
+                      {
+                        "_type": "UMLOperation",
+                        "name": "renderContent",
+                        "visibility": "public"
+                      }
+                    ]
+                  },
+                  "x": 1600,
+                  "y": 700,
+                  "width": 200,
+                  "height": 200
+                },
+                {
+                  "_type": "UMLClassView",
+                  "model": {
+                    "_type": "UMLClass",
+                    "name": "CandidateLayout",
+                    "visibility": "public",
+                    "attributes": [
+                      {
+                        "_type": "UMLAttribute",
+                        "name": "user",
+                        "type": "Object",
+                        "visibility": "private"
+                      }
+                    ],
+                    "operations": [
+                      {
+                        "_type": "UMLOperation",
+                        "name": "renderSidebar",
+                        "visibility": "public"
+                      },
+                      {
+                        "_type": "UMLOperation",
+                        "name": "renderContent",
+                        "visibility": "public"
+                      }
+                    ]
+                  },
+                  "x": 1900,
+                  "y": 100,
+                  "width": 200,
+                  "height": 200
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+} 

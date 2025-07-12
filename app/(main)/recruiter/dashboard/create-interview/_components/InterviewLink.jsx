@@ -12,7 +12,7 @@ const InterviewLink = ({ interview_id, formData }) => {
   // Get clean base URL (remove trailing slash if present)
   const baseUrl = process.env.NEXT_PUBLIC_HOST_URL.replace(/\/$/, '');
   // Construct full interview URL
-  const url = `${baseUrl}/interview/${interview_id}`;
+  const url = `${baseUrl}/${interview_id}`;
 
   const getInterviewURL = () => {
     return url;

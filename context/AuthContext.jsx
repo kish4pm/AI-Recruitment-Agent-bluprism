@@ -163,26 +163,12 @@ export const AuthContextProvider = ({ children }) => {
 
   if (session === undefined) {
     return (
-      <motion.div 
-        whileHover={{ scale: 1.02 }}
-        className="flex flex-col items-center mb-12 p-10"
-      >
-        <div className="relative w-28 h-28 mb-4">
-          <motion.div 
-            animate={{ rotate: 360 }}
-            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-            className="absolute inset-0 border-2 border-dashed border-indigo-200 rounded-full"
-          />
-          <Image 
-            src="/Suji.png" 
-            alt="Logo" 
-            fill
-            className="object-contain p-4"
-            priority
-          />
+      <div className="flex h-screen items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading Screen. Please Wait..</p>
         </div>
-        <p className="mt-2 text-gray-500">Next-generation hiring experience</p>
-      </motion.div>
+      </div>
     );
   }
 

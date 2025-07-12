@@ -4,6 +4,7 @@ import { useUser } from '@/app/provider';
 import { useRouter, usePathname } from 'next/navigation';
 import { Shield } from 'lucide-react';
 import { supabase } from '@/services/supabaseClient';
+import { toast } from 'sonner';
 
 function AdminLayout({ children }) {
   const { user } = useUser();
@@ -31,6 +32,15 @@ function AdminLayout({ children }) {
     // If user is not logged in, redirect to login
     if (!user) {
       console.log('Admin Layout - No user found, redirecting to admin login');
+      router.push('/admin/login');
+      return;
+    }
+    
+    // Check if user is banned
+    if (user.banned) {
+      console.log('Admin Layout - User is banned, signing out');
+      supabase.auth.signOut();
+      toast.error('Your account has been banned. Please contact support for more information.');
       router.push('/admin/login');
       return;
     }

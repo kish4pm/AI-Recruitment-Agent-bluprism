@@ -14,7 +14,7 @@ function QuestionList({ formData, onCreateLink }) {
   const [saveLoading, setSaveLoading] = useState(false);
   const [newQuestion, setNewQuestion] = useState("");
   const [newQuestionType, setNewQuestionType] = useState("behavioral");
-  const { user } = useUser();
+  const { user, updateUserCredits } = useUser();
   const hasCalled = useRef(false);
 
   // Debugging useEffect - logs whenever questionList changes
@@ -135,6 +135,24 @@ function QuestionList({ formData, onCreateLink }) {
     console.log("Form data being saved:", formData);
 
     try {
+      // First, deduct credit from user
+      const currentCredits = user?.credits || 0;
+      if (currentCredits <= 0) {
+        toast.error("You don't have enough credits to create an interview");
+        setSaveLoading(false);
+        return;
+      }
+
+      const newCredits = currentCredits - 1;
+      const creditUpdateResult = await updateUserCredits(newCredits);
+      
+      if (!creditUpdateResult.success) {
+        toast.error("Failed to deduct credit. Please try again.");
+        setSaveLoading(false);
+        return;
+      }
+
+      // Then create the interview
       const { data, error } = await supabase
         .from("Interviews")
         .insert([
@@ -149,22 +167,16 @@ function QuestionList({ formData, onCreateLink }) {
 
       console.log("Supabase insert result:", { data, error });
 
-      const userUpdate = await supabase
-        .from("Users")
-        .update({ credits: Number(user?.credits) - 1 })
-        .eq("email", user?.email)
-        .select();
-
-      console.log("User credit update result:", userUpdate);
-
       setSaveLoading(false);
       onCreateLink(interview_id);
 
       if (error) {
         toast("Failed to save interview");
         console.error("Supabase error:", error);
+        // Revert credit deduction if interview creation failed
+        await updateUserCredits(currentCredits);
       } else {
-        toast("Interview saved successfully!");
+        toast.success(`Interview saved successfully! Credit deducted. You now have ${newCredits} credits remaining.`);
       }
     } catch (e) {
       console.error("Error saving interview:", e);
@@ -194,6 +206,19 @@ function QuestionList({ formData, onCreateLink }) {
           <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
             Generated Questions
           </h2>
+          
+          {/* Credit Info */}
+          <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium text-blue-800">Credits Remaining:</span>
+                <span className="text-lg font-bold text-blue-600">{user?.credits || 0}</span>
+              </div>
+              <div className="text-sm text-blue-600">
+                Cost: 1 Credit
+              </div>
+            </div>
+          </div>
           
           {/* Add Question Form */}
           <div className="mb-8 p-4 bg-gray-50 rounded-lg border border-gray-200">
@@ -251,12 +276,18 @@ function QuestionList({ formData, onCreateLink }) {
           </div>
           
           <div className="flex justify-end mt-10">
-            <Button onClick={onFinish} disabled={saveLoading}>
+            <Button 
+              onClick={onFinish} 
+              disabled={saveLoading || (user?.credits || 0) <= 0}
+              className={user?.credits <= 0 ? "bg-gray-400 cursor-not-allowed" : ""}
+            >
               {saveLoading ? (
                 <>
                   <Loader2Icon className="animate-spin w-4 h-4 mr-2" />
                   Saving...
                 </>
+              ) : user?.credits <= 0 ? (
+                "No Credits Available"
               ) : (
                 "Create Interview Link & Finish"
               )}

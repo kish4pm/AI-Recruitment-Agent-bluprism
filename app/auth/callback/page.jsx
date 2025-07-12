@@ -26,9 +26,17 @@ export default function AuthCallback() {
       // 1. Check if user already exists
       const { data: existingUser, error: fetchError } = await supabase
         .from('users')
-        .select('id, role')
+        .select('id, role, banned')
         .eq('email', email)
         .single();
+
+      // Check if user is banned
+      if (existingUser && existingUser.banned) {
+        await supabase.auth.signOut();
+        toast.error('Your account has been banned. Please contact support for more information.');
+        router.push('/login');
+        return;
+      }
 
       let finalRole = 'candidate'; 
 

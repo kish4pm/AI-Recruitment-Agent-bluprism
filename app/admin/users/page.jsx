@@ -191,16 +191,61 @@ function UserManagement() {
     }
   };
 
+  // Debug function to test ban functionality
+  const testBanFunction = async (userId) => {
+    try {
+      console.log('Testing ban function for user ID:', userId);
+      
+      // Test direct Supabase update
+      const { data, error } = await supabase
+        .from('users')
+        .update({ banned: true })
+        .eq('id', userId)
+        .select();
+
+      console.log('Direct Supabase result:', { data, error });
+      
+      if (error) {
+        console.error('Direct update failed:', error);
+        
+        // Try to get user details
+        const { data: userData, error: fetchError } = await supabase
+          .from('users')
+          .select('*')
+          .eq('id', userId)
+          .single();
+          
+        console.log('User data:', userData);
+        console.log('Fetch error:', fetchError);
+      }
+    } catch (error) {
+      console.error('Test function error:', error);
+    }
+  };
+
   const banUser = async (userId, banStatus) => {
     try {
-      const { error } = await supabase
-        .from('users')
-        .update({ banned: banStatus })
-        .eq('id', userId);
+      console.log('Attempting to ban user:', { userId, banStatus });
+      
+      // Use the API route for better error handling and admin privileges
+      const response = await fetch('/api/admin/ban-user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId, banStatus }),
+      });
 
-      if (error) throw error;
+      const result = await response.json();
 
-      toast.success(banStatus ? 'User banned successfully' : 'User unbanned successfully');
+      if (!response.ok) {
+        console.error('Ban API error:', result);
+        toast.error(result.error || 'Failed to update user status');
+        return;
+      }
+
+      console.log('Ban API success:', result);
+      toast.success(result.message);
       fetchUsers(); // Refresh the list
     } catch (error) {
       console.error('Error updating user ban status:', error);
@@ -518,6 +563,16 @@ function UserManagement() {
 
                      {/* Action Buttons */}
                      <div className="flex items-center space-x-2">
+                       {/* Debug Button (temporary) */}
+                       <Button
+                         variant="outline"
+                         size="sm"
+                         onClick={() => testBanFunction(user.id)}
+                         className="text-blue-600 hover:text-blue-700"
+                       >
+                         Debug
+                       </Button>
+                       
                        {/* Ban/Unban Button */}
                        <AlertDialog>
                          <AlertDialogTrigger asChild>
