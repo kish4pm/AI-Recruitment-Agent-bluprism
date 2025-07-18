@@ -17,16 +17,14 @@ export default function InterviewDetailPage() {
 
   useEffect(() => {
     if (interviewId) fetchDetails();
-    // eslint-disable-next-line
   }, [interviewId]);
 
   const fetchDetails = async () => {
     setLoading(true);
-    // Fetch interview
     const { data: interviewData, error: interviewError } = await supabase
       .from('Interviews')
       .select('*')
-      .eq('id', interviewId)
+      .eq('interview_id', interviewId) // <-- CORRECT
       .single();
     if (interviewError) {
       setInterview(null);
@@ -34,7 +32,6 @@ export default function InterviewDetailPage() {
       return;
     }
     setInterview(interviewData);
-    // Fetch results
     const { data: resultsData } = await supabase
       .from('interview_results')
       .select('*')
@@ -72,7 +69,7 @@ export default function InterviewDetailPage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Users className="w-5 h-5" />
-            {interview.title || interview.name || 'Untitled Interview'}
+            {interview.jobPosition || interview.name || 'Untitled Interview'}
           </CardTitle>
           <CardDescription>
             Created by: <span className="font-medium">{interview.userEmail || interview.email || 'Unknown'}</span>
@@ -80,7 +77,7 @@ export default function InterviewDetailPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-2">
-          <div><span className="font-semibold">Description:</span> {interview.description || 'No description provided.'}</div>
+          <div><span className="font-semibold">Description:</span> {interview.jobDescription || 'No description provided.'}</div>
           <div><span className="font-semibold">Interview ID:</span> {interview.id}</div>
           <div><span className="font-semibold">Total Candidates:</span> {results.length}</div>
         </CardContent>
@@ -99,24 +96,8 @@ export default function InterviewDetailPage() {
               {results.map((result) => (
                 <div key={result.id} className="py-3 flex flex-col md:flex-row md:items-center md:justify-between gap-2">
                   <div>
-                    <div className="font-medium text-gray-900">{result.candidate_name || 'Unnamed Candidate'}</div>
-                    <div className="text-xs text-gray-500">{result.candidate_email || 'No email'}</div>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <div className="text-sm">
-                      <span className="font-semibold">Score:</span> {result.score ?? 'N/A'}
-                    </div>
-                    <div className="text-sm">
-                      <span className="font-semibold">Status:</span> {result.status}
-                    </div>
-                    <div className="text-sm">
-                      <span className="font-semibold">Duration:</span> {result.duration ? Math.round(result.duration / 60) + ' min' : 'N/A'}
-                    </div>
-                    {result.status === 'completed' ? (
-                      <CheckCircle className="w-5 h-5 text-green-500" />
-                    ) : (
-                      <XCircle className="w-5 h-5 text-gray-400" />
-                    )}
+                    <div className="font-medium text-gray-900">{result.fullname || 'Unnamed Candidate'}</div>
+                    <div className="text-xs text-gray-500">{result.email || 'No email'}</div>
                   </div>
                 </div>
               ))}

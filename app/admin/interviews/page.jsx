@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { BarChart3, Search, Filter, Download, Calendar, Users, Clock, CheckCircle, XCircle } from 'lucide-react';
+import { BarChart3, Search, Filter, Download, Calendar, Users, Clock, CheckCircle, XCircle, Trash2 } from 'lucide-react';
 import { supabase } from '@/services/supabaseClient';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,6 +8,17 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { toast } from 'sonner';
 import moment from 'moment';
 import Link from 'next/link';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 
 function InterviewAnalytics() {
   const [interviews, setInterviews] = useState([]);
@@ -16,6 +27,8 @@ function InterviewAnalytics() {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('created_at');
   const [sortOrder, setSortOrder] = useState('desc');
+  const [deletingId, setDeletingId] = useState(null);
+  const [showDeleteAlert, setShowDeleteAlert] = useState(false);
 
   useEffect(() => {
     fetchInterviews();
@@ -67,6 +80,7 @@ function InterviewAnalytics() {
       }
 
       console.log(`Found ${interviewsData.length} interviews`);
+      console.log(interviewsData[0]);
 
       // Get candidate counts and results for each interview
       const interviewsWithStats = await Promise.all(
@@ -75,10 +89,12 @@ function InterviewAnalytics() {
             const { data: results, error: resultsError } = await supabase
               .from('interview_results')
               .select('*')
-              .eq('interview_id', interview.id);
+              .eq('interview_id', interview.interview_id);
+
+            console.log('Results for interview', interview.interview_id, results);
 
             if (resultsError) {
-              console.error('Error fetching results for interview:', interview.id, resultsError);
+              console.error('Error fetching results for interview:', interview.interview_id, resultsError);
               // Return interview with empty stats if results fetch fails
               return {
                 ...interview,
@@ -196,6 +212,45 @@ function InterviewAnalytics() {
   const getCompletionRate = (interview) => {
     if (interview.candidateCount === 0) return 0;
     return Math.round((interview.completedCount / interview.candidateCount) * 100);
+  };
+
+  const handleDeleteInterview = async (interview) => {
+    setDeletingId(interview.interview_id);
+    setShowDeleteAlert(true);
+  };
+
+  const confirmDeleteInterview = async () => {
+    const interview = filteredInterviews.find(i => i.interview_id === deletingId);
+    if (!interview) return;
+    try {
+      // Delete interview results first
+      const { error: resultsError } = await supabase
+        .from('interview_results')
+        .delete()
+        .eq('interview_id', interview.interview_id);
+      if (resultsError) {
+        toast.error('Failed to delete interview results');
+        setShowDeleteAlert(false);
+        setDeletingId(null);
+        return;
+      }
+      // Delete the interview
+      const { error: interviewError } = await supabase
+        .from('Interviews')
+        .delete()
+        .eq('interview_id', interview.interview_id);
+      if (interviewError) {
+        toast.error('Failed to delete interview');
+      } else {
+        toast.success('Interview deleted successfully');
+        fetchInterviews();
+      }
+    } catch (e) {
+      toast.error('Error deleting interview');
+    } finally {
+      setShowDeleteAlert(false);
+      setDeletingId(null);
+    }
   };
 
   return (
@@ -343,67 +398,75 @@ function InterviewAnalytics() {
           ) : (
             <div className="space-y-4">
               {filteredInterviews.map((interview) => (
-                <Link
-                  key={interview.id}
-                  href={`/admin/interviews/${interview.id}`}
-                  className="block"
-                >
-                  <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-blue-50 transition-colors cursor-pointer">
-                    <div className="flex items-center space-x-4">
-                      <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center">
-                        <BarChart3 className="w-6 h-6 text-blue-600" />
+                <div key={interview.interview_id} className="relative">
+                  <Link
+                    href={`/admin/interviews/${interview.interview_id}`}
+                    className="block"
+                  >
+                    <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-blue-50 transition-colors cursor-pointer">
+                      <div className="flex items-center space-x-4">
+                        <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center">
+                          <BarChart3 className="w-6 h-6 text-blue-600" />
+                        </div>
+                        <div>
+                          <h3 className="font-medium text-gray-900">
+                            {interview.title || interview.name || interview.jobPosition || interview.jobDescription || 'Untitled Interview'}
+                          </h3>
+                          <div className="flex items-center space-x-4 text-sm text-gray-500">
+                            <span className="flex items-center">
+                              <Users className="w-3 h-3 mr-1" />
+                              {interview.userEmail || interview.email || 'Unknown'}
+                            </span>
+                            <span className="flex items-center">
+                              <Calendar className="w-3 h-3 mr-1" />
+                              {moment(interview.created_at).format('MMM DD, YYYY')}
+                            </span>
+                          </div>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="font-medium text-gray-900">
-                          {interview.title || interview.name || 'Untitled Interview'}
-                        </h3>
-                        <div className="flex items-center space-x-4 text-sm text-gray-500">
-                          <span className="flex items-center">
-                            <Users className="w-3 h-3 mr-1" />
-                            {interview.userEmail || interview.email || 'Unknown'}
-                          </span>
-                          <span className="flex items-center">
-                            <Calendar className="w-3 h-3 mr-1" />
-                            {moment(interview.created_at).format('MMM DD, YYYY')}
-                          </span>
+                      
+                      <div className="flex items-center space-x-6">
+                        <div className="text-center">
+                          <div className="text-sm font-medium text-gray-900">
+                            {interview.candidateCount} candidates
+                          </div>
+                          <div className="text-xs text-gray-500">
+                            {interview.completedCount} completed
+                          </div>
+                        </div>
+                        
+                        <div className="text-center">
+                          <div className="text-sm font-medium text-gray-900">
+                            {interview.avgScore} avg score
+                          </div>
+                          <div className="text-xs text-gray-500">
+                            {getCompletionRate(interview)}% completion
+                          </div>
+                        </div>
+                        
+                        <div className="text-center">
+                          <div className="text-sm font-medium text-gray-900">
+                            {Math.round(interview.totalDuration / 60)} min
+                          </div>
+                          <div className="text-xs text-gray-500">total time</div>
+                        </div>
+                        
+                        <div className="text-right">
+                          <div className={`text-xs px-2 py-1 rounded-full ${getStatusColor(interview)}`}>
+                            {getStatusText(interview)}
+                          </div>
                         </div>
                       </div>
                     </div>
-                    
-                    <div className="flex items-center space-x-6">
-                      <div className="text-center">
-                        <div className="text-sm font-medium text-gray-900">
-                          {interview.candidateCount} candidates
-                        </div>
-                        <div className="text-xs text-gray-500">
-                          {interview.completedCount} completed
-                        </div>
-                      </div>
-                      
-                      <div className="text-center">
-                        <div className="text-sm font-medium text-gray-900">
-                          {interview.avgScore} avg score
-                        </div>
-                        <div className="text-xs text-gray-500">
-                          {getCompletionRate(interview)}% completion
-                        </div>
-                      </div>
-                      
-                      <div className="text-center">
-                        <div className="text-sm font-medium text-gray-900">
-                          {Math.round(interview.totalDuration / 60)} min
-                        </div>
-                        <div className="text-xs text-gray-500">total time</div>
-                      </div>
-                      
-                      <div className="text-right">
-                        <div className={`text-xs px-2 py-1 rounded-full ${getStatusColor(interview)}`}>
-                          {getStatusText(interview)}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
+                  </Link>
+                  <button
+                    className="absolute top-2 right-2 text-red-600 hover:text-red-800"
+                    onClick={() => handleDeleteInterview(interview)}
+                    title="Delete Interview"
+                  >
+                    <Trash2 className="w-5 h-5" />
+                  </button>
+                </div>
               ))}
               
               {filteredInterviews.length === 0 && !loading && (
@@ -416,6 +479,20 @@ function InterviewAnalytics() {
           )}
         </CardContent>
       </Card>
+      <AlertDialog open={showDeleteAlert} onOpenChange={setShowDeleteAlert}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Interview</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this interview and all its results? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setShowDeleteAlert(false)}>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDeleteInterview} className="bg-red-600 hover:bg-red-700">Delete</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
