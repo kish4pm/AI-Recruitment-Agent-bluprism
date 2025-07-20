@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import { InterviewDataContext } from '@/context/InterviewDataContext';
 import { motion } from 'framer-motion';
 import { useUser } from '@/app/provider';
+import axios from 'axios';
 
 function Interview() {
   const params = useParams();
@@ -28,6 +29,14 @@ function Interview() {
   const router = useRouter();
   const [accessDenied, setAccessDenied] = useState(false);
   const { user } = useUser();
+
+  let provider = null;
+  if (typeof window !== 'undefined') {
+    try {
+      provider = JSON.parse(localStorage.getItem('supabase.auth.token'))?.currentSession?.user?.app_metadata?.provider;
+    } catch {}
+  }
+  const isGoogleUser = provider === 'google';
 
   useEffect(() => {
     if (interview_id) GetInterviewDetails();
@@ -95,7 +104,7 @@ function Interview() {
   
   const onJoinInterview = async () => {
     if (!validateJoin()) return; // Deny entry if validation fails
-  
+
     try {
       setInterviewInfo({
         ...interviewInfo,
@@ -105,10 +114,10 @@ function Interview() {
         duration: interviewData?.duration,
         userEmail: userEmail,
         type: interviewData?.type,
-        questionList: interviewData?.questionList,
+        questionList: interviewData?.questionList, // Use the existing questions
         interview_id: interview_id,
       });
-  
+
       toast.success("Creating your interview session...");
       await new Promise((resolve) => setTimeout(resolve, 1500)); // Smooth delay
       router.push(`/interview/${interview_id}/start`);

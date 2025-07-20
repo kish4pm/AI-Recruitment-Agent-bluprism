@@ -20,6 +20,15 @@ export default function CandidateProfile() {
     picture: null
   });
   const [originalData, setOriginalData] = useState({});
+  const [password, setPassword] = useState("");
+  const [passwordSaving, setPasswordSaving] = useState(false);
+  let provider = null;
+  if (typeof window !== 'undefined') {
+    try {
+      provider = JSON.parse(localStorage.getItem('sb-oqaqnjpovruuqpuohjbp-auth-token'))?.user?.app_metadata?.provider;
+    } catch {}
+  }
+  const isGoogleUser = provider === 'google';
 
   useEffect(() => {
     if (user) {
@@ -185,6 +194,24 @@ export default function CandidateProfile() {
     }
   };
 
+  const handlePasswordChange = async () => {
+    if (!password) return;
+    setPasswordSaving(true);
+    try {
+      const { error } = await supabase.auth.updateUser({ password });
+      if (error) {
+        toast.error('Failed to change password');
+      } else {
+        toast.success('Password changed successfully!');
+        setPassword("");
+      }
+    } catch (e) {
+      toast.error('Error changing password');
+    } finally {
+      setPasswordSaving(false);
+    }
+  };
+
   const hasChanges = () => {
     return JSON.stringify(profileData) !== JSON.stringify(originalData);
   };
@@ -304,6 +331,49 @@ export default function CandidateProfile() {
             </Button>
           </CardContent>
         </Card>
+
+ {/* Security Section */}
+ <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <User className="w-5 h-5" />
+            Security
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div>
+            <Label htmlFor="password" className="py-2">Change Password</Label>
+            <Input
+              id="password"
+              type="password"
+              value={isGoogleUser ? 'You can\'t change the password because you login with Google OAuth' : password}
+              onChange={e => setPassword(e.target.value)}
+              placeholder={isGoogleUser ? '' : 'Enter new password'}
+              disabled={isGoogleUser || passwordSaving}
+              
+            />
+            {isGoogleUser && (
+              <p className="text-xs text-gray-500 mt-1">You can&apos;t change the password because you login with Google OAuth</p>
+            )}
+          </div>
+          <Button
+            onClick={handlePasswordChange}
+            disabled={isGoogleUser || !password || passwordSaving}
+            className="w-full"
+          >
+            {passwordSaving ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Changing...
+              </>
+            ) : (
+              'Change Password'
+            )}
+          </Button>
+        </CardContent>
+      </Card>
+      
+
       </div>
 
       {/* Account Information */}
@@ -332,6 +402,8 @@ export default function CandidateProfile() {
           </div>
         </CardContent>
       </Card>
+
+     
     </div>
   );
 } 

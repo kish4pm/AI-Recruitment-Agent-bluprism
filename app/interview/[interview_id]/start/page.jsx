@@ -25,7 +25,6 @@ function StartInterview() {
   const conversation = useRef(null);
   const { interview_id } = useParams();
   
-  // const { interviews } = useContext(InterviewDataContext);
   const router = useRouter();
   const [userProfile, setUserProfile] = useState({
     picture: null,
@@ -36,10 +35,9 @@ function StartInterview() {
 
 
   useEffect(() => {
-    // Load Google profile if available and userProfile is not already set
     if (
       typeof window !== 'undefined' &&
-      !userProfile.name // Prevent override if already set
+      !userProfile.name 
     ) {
       const googleProfile = localStorage.getItem('googleProfile');
       if (googleProfile) {
@@ -48,12 +46,11 @@ function StartInterview() {
       }
     }
 
-    // Start the interview if conditions are met
     if (interviewInfo?.jobPosition && vapi && !start) {
-      setStart(true); // Mark the interview as started
-      startCall(); // Trigger the startCall function
+      setStart(true); 
+      startCall(); 
     }
-  }, [interviewInfo, vapi]); // Dependencies: re-run if interviewInfo or vapi changes
+  }, [interviewInfo, vapi]); 
 
   useEffect(() => {
     console.log("interviewInfo:", interviewInfo);
@@ -70,9 +67,11 @@ function StartInterview() {
 
   const startCall = async () => {
     const jobPosition = interviewInfo?.jobPosition || "Unknown Position";
+    // Use the generated questions for this candidate
     const questionList = interviewInfo?.questionList?.interviewQuestions?.map((question) => question?.question) || [];
+
     console.log("jobPosition:", jobPosition);
-    console.log("questionList:' ", questionList);
+    console.log("questionList:", questionList);
 
     const assistantOptions = {
       name: "AI Recruiter",
@@ -96,15 +95,15 @@ function StartInterview() {
 You are an AI voice assistant conducting interviews.
 Your job is to ask candidates provided interview questions, assess their responses.
 Begin the conversation with a friendly introduction, setting a relaxed yet professional tone. Example:
-"Hey ${interviewInfo?.candidate_name}! Welcome to your ${interviewInfo?.jobPosition} interview. Let’s get started with a few questions!"
-Ask one question at a time and wait for the candidate’s response before proceeding. Keep the questions clear and concise. Below Are the questions ask one by one:
+"Hey ${interviewInfo?.candidate_name}! Welcome to your ${interviewInfo?.jobPosition} interview. Let's get started with a few questions!"
+Ask one question at a time and wait for the candidate's response before proceeding. Keep the questions clear and concise. Below Are the questions ask one by one:
 Questions: ${questionList}
 If the candidate struggles, offer hints or rephrase the question without giving away the answer. Example:
 "Need a hint? Think about how React tracks component updates!"
 Provide brief, encouraging feedback after each answer. Example:
-"Nice! That’s a solid answer."
+"Nice! That's a solid answer."
 "Hmm, not quite! Want to try again?"
-Keep the conversation natural and engaging—use casual phrases like "Alright, next up..." or "Let’s tackle a tricky one!"
+Keep the conversation natural and engaging—use casual phrases like "Alright, next up..." or "Let's tackle a tricky one!"
 After 5-7 questions, wrap up the interview smoothly by summarizing their performance. Example:
 "That was great! You handled some tough questions well. Keep sharpening your skills!"
 End on a positive note:
@@ -112,7 +111,7 @@ End on a positive note:
 Key Guidelines:
 ✅ Be friendly, engaging, and witty 🎤
 ✅ Keep responses short and natural, like a real conversation
-✅ Adapt based on the candidate’s confidence level
+✅ Adapt based on the candidate's confidence level
 ✅ Ensure the interview remains focused on React
 `.trim(),
           },
@@ -204,12 +203,39 @@ Key Guidelines:
             conversation_transcript: parsedTranscript,
             recommendations: "Not recommended",
             completed_at: new Date().toISOString(),
-and           },
+          },
         ]);
   
       if (insertError) {
         console.error("Supabase insert error:", insertError);
         throw new Error("Insert failed");
+      }
+
+      // After saving feedback, generate new questions for the next candidate
+      try {
+        const aiResult = await axios.post("/api/ai-model", {
+          jobPosition: interviewInfo?.jobPosition,
+          jobDescription: interviewInfo?.jobDescription,
+          duration: interviewInfo?.duration,
+          type: interviewInfo?.type,
+        });
+        const rawContent = aiResult?.data?.content || aiResult?.data?.Content;
+        let newQuestions = null;
+        if (rawContent) {
+          const match = rawContent.match(/```json\s*([\s\S]*?)\s*```/);
+          if (match && match[1]) {
+            newQuestions = JSON.parse(match[1].trim());
+          }
+        }
+        if (newQuestions) {
+          // Update the interview's questionList in Supabase
+          await supabase
+            .from('Interviews')
+            .update({ questionList: newQuestions })
+            .eq('interview_id', interview_id);
+        }
+      } catch (e) {
+        console.error("Failed to generate or update new questions for next candidate", e);
       }
   
       toast.success("Feedback generated successfully!");

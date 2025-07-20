@@ -6,7 +6,7 @@ export async function POST(req) {
     const { conversation } = await req.json();
     console.log(typeof conversation);
     const FINAL_PROMPT = FEEDBACK_PROMPT.replace("{{conversation}}", JSON.stringify(conversation));
-    // console.log(FINAL_PROMPT);
+   
     try {
         const openai = new OpenAI({
             baseURL: "https://openrouter.ai/api/v1",
