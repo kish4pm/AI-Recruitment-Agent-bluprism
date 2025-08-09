@@ -29,7 +29,10 @@ export async function POST(req) {
         responseformat:'json'
       })
       console.log(completion.choices[0].message)
-      return NextResponse.json(completion.choices[0].message)
+      // Instead of returning completion.choices[0].message directly, wrap it in { content: ... }
+      const message = completion.choices[0].message;
+      let content = message?.content || message?.Content || message;
+      return NextResponse.json({ content });
     }
     catch(e)
     {

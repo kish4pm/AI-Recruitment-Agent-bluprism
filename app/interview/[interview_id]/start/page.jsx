@@ -32,25 +32,30 @@ function StartInterview() {
   });
   const [isGeneratingFeedback, setIsGeneratingFeedback] = useState(false);
 
-
-
+  // Restore interviewInfo from localStorage if missing
   useEffect(() => {
-    if (
-      typeof window !== 'undefined' &&
-      !userProfile.name 
-    ) {
-      const googleProfile = localStorage.getItem('googleProfile');
-      if (googleProfile) {
-        const { picture, name } = JSON.parse(googleProfile);
-        setUserProfile({ picture, name });
+    if (!interviewInfo && typeof window !== 'undefined') {
+      const stored = localStorage.getItem('interviewInfo');
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored);
+          if (parsed && parsed.interview_id === interview_id) {
+            setInterviewInfo(parsed);
+          } else {
+            // interview_id mismatch, clear
+            localStorage.removeItem('interviewInfo');
+            router.replace(`/interview/${interview_id}`);
+          }
+        } catch {
+          localStorage.removeItem('interviewInfo');
+          router.replace(`/interview/${interview_id}`);
+        }
+      } else {
+        // No info, redirect to join page
+        router.replace(`/interview/${interview_id}`);
       }
     }
-
-    if (interviewInfo?.jobPosition && vapi && !start) {
-      setStart(true); 
-      startCall(); 
-    }
-  }, [interviewInfo, vapi]); 
+  }, [interviewInfo, interview_id, setInterviewInfo, router]);
 
   useEffect(() => {
     console.log("interviewInfo:", interviewInfo);
@@ -171,6 +176,11 @@ Key Guidelines:
   }, [vapi]);
 
   const GenerateFeedback = async () => {
+    if (!interviewInfo || !conversation.current) {
+      toast.error("Interview data missing. Please restart the interview.");
+      router.replace(`/interview/${interview_id}`);
+      return;
+    }
     try {
       const result = await axios.post("/api/ai-feedback", {
         conversation: conversation.current,
@@ -239,6 +249,10 @@ Key Guidelines:
       }
   
       toast.success("Feedback generated successfully!");
+      // Clear localStorage to avoid stale data
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('interviewInfo');
+      }
       router.replace("/interview/" + interviewInfo?.interview_id + "/completed");
     } catch (error) {
       console.error("Feedback generation failed:", error);

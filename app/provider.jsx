@@ -21,18 +21,9 @@ function Provider({ children }) {
             .select('*')
             .eq('email', supaUser.email);
         if (users?.length === 0) {
-            // create new user with 3 credits for recruiters
-            const { data, error: insertError } = await supabase.from('users')
-                .insert([
-                    {
-                        name: supaUser?.user_metadata?.name,
-                        email: supaUser?.email,
-                        picture: supaUser?.user_metadata?.picture,
-                        credits: 3, // Give 3 credits to new users
-                        role: 'recruiter' // Default role
-                    }
-                ])
-            setUser(data?.[0] || null);
+            // Do NOT create user here for OAuth signups!
+            // Let /auth/callback handle user creation and role assignment
+            setUser(null);
             return;
         }
         

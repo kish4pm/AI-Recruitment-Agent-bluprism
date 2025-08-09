@@ -26,11 +26,7 @@ export const SideBarOptions=[
         icon:WalletCards,
         path:'/recruiter/billing'
     },
-    {
-        name:'Settings',
-        icon:Settings,
-        path:'/recruiter/settings'
-    },
+   
    
 ]
 
@@ -50,11 +46,7 @@ export const SideBarCondidate=[
         icon:User2Icon,
         path:'/candidate/profile'
     },
-    {
-        name:'Settings',
-        icon:Settings,
-        path:'/candidate/settings'
-    },
+   
    
 ]
 

@@ -84,29 +84,24 @@ function Interview() {
   };
 
   const validateJoin = () => {
-    // Validate username
     if (!userName.trim()) {
       toast.warning("Full name is required");
       return false;
     }
   
-    // Ensure the username has at least two words (e.g., "First Last")
     if (userName.trim().split(" ").length < 2) {
       toast.warning("Please provide your full name (e.g., First Last)");
       return false;
     }
   
-    // Validate email
-    
-  
-    return true; // Validation passed
+    return true;
   };
   
   const onJoinInterview = async () => {
     if (!validateJoin()) return; // Deny entry if validation fails
 
     try {
-      setInterviewInfo({
+      const newInterviewInfo = {
         ...interviewInfo,
         candidate_name: userName,
         jobPosition: interviewData?.jobPosition,
@@ -116,8 +111,12 @@ function Interview() {
         type: interviewData?.type,
         questionList: interviewData?.questionList, // Use the existing questions
         interview_id: interview_id,
-      });
-
+      };
+      setInterviewInfo(newInterviewInfo);
+     
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('interviewInfo', JSON.stringify(newInterviewInfo));
+      }
       toast.success("Creating your interview session...");
       await new Promise((resolve) => setTimeout(resolve, 1500)); // Smooth delay
       router.push(`/interview/${interview_id}/start`);

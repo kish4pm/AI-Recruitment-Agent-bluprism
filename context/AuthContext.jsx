@@ -130,7 +130,7 @@ export const AuthContextProvider = ({ children }) => {
           name,
           role,
           picture: "https://cdn-icons-png.flaticon.com/512/149/149071.png",
-          credits: 0,
+          credits: 3,
         },
       ]);
   
