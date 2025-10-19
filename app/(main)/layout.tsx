@@ -1,4 +1,9 @@
-import './_client-keepalive';
-export default function MainLayout({ children }: { children: React.ReactNode }) {
-  return <>{children}</>;
+export const metadata = { title: 'Bluprism' };
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <body>{children}</body>
+    </html>
+  );
 }
