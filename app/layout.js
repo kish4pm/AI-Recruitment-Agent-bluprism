@@ -1,14 +1,11 @@
-'use client';
-import React from 'react';
-import { SpeedInsights } from '@vercel/speed-insights/next';
+export const metadata = { title: 'Bluprism' };
 
-export default function MainLayout({ children }) {
+export default function RootLayout({ children }) {
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-900">
-      <main className="container mx-auto p-4">
+    <html lang="en">
+      <body style={{ fontFamily: 'system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial, sans-serif' }}>
         {children}
-      </main>
-      <SpeedInsights />
-    </div>
+      </body>
+    </html>
   );
 }
