@@ -1,7 +1,10 @@
-import { createClient } from '@supabase/supabase-js';
+/**
+ * Minimal supabase client stub.
+ * Replace this with the real supabase client initialisation when ready.
+ */
+export const supabase = {
+  from: () => ({ select: async () => ({ data: null, error: null }) }),
+  auth: { user: () => null }
+};
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+export default supabase;
